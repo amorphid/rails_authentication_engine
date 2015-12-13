@@ -1,0 +1,9 @@
+<h1>Sign Up</h1>
+
+<%= form_tag sign_ups_path do %>
+  <p>
+    Email:<br />
+    <%= text_field_tag :email %>
+  </p>
+  <%= submit_tag "Submit" %>
+<% end %>
