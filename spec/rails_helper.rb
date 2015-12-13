@@ -1,6 +1,6 @@
 ENV['RAILS_ENV'] ||= 'test'
 
-require File.expand_path('../../spec/dummeconfig/environment', __FILE__)
+require File.expand_path('../../spec/dummy/config/environment', __FILE__)
 
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 
