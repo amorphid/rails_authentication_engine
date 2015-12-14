@@ -17,9 +17,11 @@ ActiveRecord::Schema.define(version: 20151213185001) do
   enable_extension "plpgsql"
 
   create_table "users", force: :cascade do |t|
-    t.string "email"
-    t.string "password_digest"
-    t.string "timestamps"
+    t.string   "email"
+    t.string   "password_digest"
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.string   "timestamps"
   end
 
 end
