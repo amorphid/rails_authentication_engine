@@ -1,5 +1,6 @@
 module RailsAuthenticationEngine
-  class SignUpsController < ApplicationController
+  class SignUpEmailsController < ApplicationController
+    before_action :set_user
 
     def new
     end
@@ -25,7 +26,7 @@ module RailsAuthenticationEngine
 
     def sign_up_params
       params.permit(:email).merge({
-        reset_password_token:   @user.reset_password_token_as_md5_hash,
+        reset_password_token:   @user.reset_password_token_as_urlsafe_base64,
         reset_password_sent_at: DateTime.new.getutc
       })
     end

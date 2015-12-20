@@ -10,9 +10,8 @@
 </p>
 
 <p>
-  To confirm your email, please visit this address:
-  <br />
-  <%= link_to nil, "#{rails_authentication_engine.new_password_url}?token=#{@user.reset_password_token_as_urlsafe_base64}" %>
+  To confirm your email, please
+  <%= link_to "click here", "#{rails_authentication_engine.new_sign_up_password_url}?token=#{@user.reset_password_token_as_urlsafe_base64}" %>.
 </p>
 
 <p>
