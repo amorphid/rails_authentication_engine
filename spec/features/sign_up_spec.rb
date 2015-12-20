@@ -11,5 +11,6 @@ feature 'Sign Up' do
     open_email(email)
     current_email.click_link("click here")
     fill_in :password, with: password
+    click_button 'Submit'
   end
 end

@@ -2,7 +2,7 @@ Dear <%= @user.email %>,
 
 If your actual name is <%= @user.email %>, we think that is quite interesting.
 
-To confirm your email, please visit this address:
+To confirm your email, please visit this address within 24 hours:
 <%= "#{rails_authentication_engine.new_sign_up_password_url}?token=#{@user.reset_password_token_as_urlsafe_base64}" %>
 
 Cheers,
