@@ -1,0 +1,9 @@
+<h1>Sign Up</h1>
+
+<%= form_tag sign_up_passwords_path do %>
+  <p>
+    Password:<br />
+    <%= text_field_tag :password %>
+  </p>
+  <%= submit_tag "Submit" %>
+<% end %>
