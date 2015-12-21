@@ -1,6 +1,6 @@
 module RailsAuthenticationEngine
   class SignUpEmailsController < ApplicationController
-    before_action :set_email_confirmation
+    before_action :set_email_confirmation, only: :create
 
     def create
       if @email_confirmation.update(email_confirmation_params)
@@ -12,6 +12,7 @@ module RailsAuthenticationEngine
     end
 
     def new
+      @email_confirmation = EmailConfirmation.new
     end
 
     private
