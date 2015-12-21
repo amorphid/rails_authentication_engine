@@ -1,3 +1,7 @@
 class EmailConfirmation < ActiveRecord::Base
-  belongs_to :user
+  after_initialize :initialize_token
+
+  def initialize_token
+    self.token ||= SecureRandom.urlsafe_base64(24)
+  end
 end

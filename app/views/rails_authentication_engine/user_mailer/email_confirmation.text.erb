@@ -1,9 +1,9 @@
-Dear <%= @user.email %>,
+Dear <%= @email_confirmation.email %>,
 
-If your actual name is <%= @user.email %>, we think that is quite interesting.
+If your actual name is <%= @email_confirmation.email %>, we think that is quite interesting.
 
 To confirm your email, please visit this address within 24 hours:
-<%= "#{rails_authentication_engine.new_sign_up_password_url}?token=#{@user.email_confirmation_token}" %>
+<%= "#{rails_authentication_engine.new_sign_up_password_url}?token=#{@email_confirmation.token}" %>
 
 Cheers,
 Michael

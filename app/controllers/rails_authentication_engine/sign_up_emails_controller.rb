@@ -1,14 +1,11 @@
 module RailsAuthenticationEngine
   class SignUpEmailsController < ApplicationController
-    before_action :set_user
+    before_action :set_email_confirmation
 
     def create
-      if @user.update(sign_up_email_params)
-        EmailConfirmation.create(
-          token: @user.email_confirmation_token,
-          user_id: @user.id
-        )
-        UserMailer.email_confirmation(@user).deliver_now
+
+      if @email_confirmation.update(email_confirmation_params)
+        UserMailer.email_confirmation(@email_confirmation).deliver_now
         render :show
       else
         render :new
@@ -20,15 +17,15 @@ module RailsAuthenticationEngine
 
     private
 
-    def find_or_initialize_user
-      User.find_or_initialize_by(email: params[:email])
+    def find_or_initialize_email_confirmation
+
     end
 
-    def set_user
-      @user ||= CreateSignUpUserDelegator.new(find_or_initialize_user)
+    def set_email_confirmation
+      @email_confirmation ||= EmailConfirmation.find_or_initialize_by(email: params[:email])
     end
 
-    def sign_up_email_params
+    def email_confirmation_params
       params.permit(:email)
     end
   end

@@ -1,17 +1,17 @@
 <p>
   Dear
-  <%= @user.email %>,
+  <%= @email_confirmation.email %>,
 </p>
 
 <p>
   If your actual name is
-  <%= @user.email %>,
+  <%= @email_confirmation.email %>,
   we think that is quite interesting.
 </p>
 
 <p>
   To confirm your email, please
-  <%= link_to "click here", "#{rails_authentication_engine.new_sign_up_password_url}?token=#{@user.email_confirmation_token}" %>
+  <%= link_to "click here", "#{rails_authentication_engine.new_sign_up_password_url}?token=#{@email_confirmation.token}" %>
   within 24 hours.
 </p>
 

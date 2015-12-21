@@ -6,7 +6,7 @@ class CreateUser < ActiveRecord::Migration
       t.string   :reset_password_token
       t.datetime :reset_password_sent_at
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

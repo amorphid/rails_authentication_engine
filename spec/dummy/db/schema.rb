@@ -11,17 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151221000223) do
+ActiveRecord::Schema.define(version: 20151221113926) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "email_confirmations", force: :cascade do |t|
     t.string   "token"
-    t.datetime "sent_at"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "password_resets", force: :cascade do |t|
+    t.string   "token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -29,8 +34,8 @@ ActiveRecord::Schema.define(version: 20151221000223) do
     t.string   "password_digest"
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
 end
