@@ -3,6 +3,10 @@ class EmailConfirmation < ActiveRecord::Base
 
   has_many :password_resets
 
+  validates :email, presence: true
+
+  private
+
   def initialize_token
     self.token ||= SecureRandom.urlsafe_base64(24)
   end

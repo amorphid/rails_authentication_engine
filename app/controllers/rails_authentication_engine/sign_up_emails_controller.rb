@@ -3,7 +3,6 @@ module RailsAuthenticationEngine
     before_action :set_email_confirmation
 
     def create
-
       if @email_confirmation.update(email_confirmation_params)
         UserMailer.email_confirmation(@email_confirmation).deliver_now
         render :show

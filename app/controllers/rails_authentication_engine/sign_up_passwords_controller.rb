@@ -1,10 +1,31 @@
 module RailsAuthenticationEngine
   class SignUpPasswordsController < ApplicationController
     def create
-      reset = PasswordResetUser.find_by(token: session[:password_reset_token])
+      if PasswordReset.exists?(token: session[:password_reset_token])
+        password_reset = PasswordReset.find_by(token: session[:password_reset_token])
 
-      if DateTime.now.utc.to_f - reset.created_at.to_f > 86400
-        binding.pry
+        if (DateTime.now.utc.to_f - password_reset.created_at.to_f) > 86400
+          flash[:error] = "Expired password link.  Please enter your email to receive another one."
+          redirect_to new_sign_up_email_path
+        else
+          email_confirmation = password_reset.email_confirmation
+          @user = User.find_or_initialize_by(email: email_confirmation.email)
+
+          if @user.update(user_params)
+            email_confirmation.password_resets.delete_all
+            email_confirmation.destroy
+            session[:password_reset_token] = nil
+            session[:user_id] = @user.id
+            flash[:success] = "Password set successfully.  You are now logged in.  Woot!"
+            # binding.pry
+            redirect_to Rails.application.routes.url_helpers.root_path
+          else
+            render :new
+          end
+        end
+      else
+        flash[:error] = "Invalid password link.  Please enter your email to receive another one."
+        redirect_to new_sign_up_email_path
       end
     end
 
@@ -15,8 +36,9 @@ module RailsAuthenticationEngine
           flash[:error] = "Expired email confirmation link.  Please enter your email to receive another one."
           redirect_to new_sign_up_email_path
         else
-          reset = PasswordReset.create(token: SecureRandom.urlsafe_base64(24), email_confirmation_id: email_confirmation.id)
+          reset = PasswordReset.create(email_confirmation_id: email_confirmation.id)
           session[:password_reset_token] = reset.token
+          @user = User.new
           render :new
         end
       else
@@ -27,8 +49,8 @@ module RailsAuthenticationEngine
 
     private
 
-    def sign_up_password_params
-      params.permit(:token)
+    def user_params
+      params.permit(:password)
     end
   end
 end
