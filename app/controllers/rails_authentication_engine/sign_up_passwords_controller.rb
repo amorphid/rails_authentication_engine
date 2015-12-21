@@ -8,13 +8,14 @@ module RailsAuthenticationEngine
     end
 
     def new
-      if User.exists?(reset_password_token: params[:token])
-        @user = User.find_by(reset_password_token: params[:token])
-        if DateTime.now.utc.to_f - @user.reset_password_sent_at.to_f >= 86400
+      if EmailConfirmation.exists?(token: params[:token])
+        confirmation = EmailConfirmation.find_by(token: params[:token])
+        if DateTime.now.utc.to_f - confirmation.created_at.to_f > 86400
           flash[:error] = "Expired email confirmation link.  Please enter your email to receive another one."
           redirect_to new_sign_up_email_path
         else
-          session[:reset_password_token] = params[:token]
+          reset = PasswordReset.create(token: SecureRandom.urlsafe_base64(24))
+          session[:password_reset_token] = PasswordReset.create(token: reset.token)
           render :new
         end
       else

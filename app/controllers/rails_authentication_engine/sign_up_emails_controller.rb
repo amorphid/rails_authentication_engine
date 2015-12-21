@@ -5,7 +5,6 @@ module RailsAuthenticationEngine
     def create
       if @user.update(sign_up_email_params)
         EmailConfirmation.create(
-          sent_at: DateTime.now.utc,
           token: @user.email_confirmation_token,
           user_id: @user.id
         )
