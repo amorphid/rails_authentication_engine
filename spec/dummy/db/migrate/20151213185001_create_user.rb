@@ -1,6 +1,8 @@
 class CreateUser < ActiveRecord::Migration
   def change
-    create_table :users do |t|
+    enable_extension 'uuid-ossp'
+
+    create_table :users, id: :uuid do |t|
       t.string   :email
       t.string   :password_digest
       t.string   :reset_password_token
