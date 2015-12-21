@@ -4,6 +4,11 @@ module RailsAuthenticationEngine
 
     def create
       if @user.update(sign_up_email_params)
+        EmailConfirmation.create(
+          sent_at: DateTime.now.utc,
+          token: @user.email_confirmation_token,
+          user_id: @user.id
+        )
         UserMailer.email_confirmation(@user).deliver_now
         render :show
       else
@@ -25,10 +30,7 @@ module RailsAuthenticationEngine
     end
 
     def sign_up_email_params
-      params.permit(:email).merge({
-        reset_password_token:   @user.reset_password_token_as_urlsafe_base64,
-        reset_password_sent_at: DateTime.now.utc
-      })
+      params.permit(:email)
     end
   end
 end

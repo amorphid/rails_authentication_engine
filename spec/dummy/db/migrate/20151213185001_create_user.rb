@@ -5,7 +5,8 @@ class CreateUser < ActiveRecord::Migration
       t.string   :password_digest
       t.string   :reset_password_token
       t.datetime :reset_password_sent_at
-      t.string   :timestamps
+
+      t.timestamps
     end
   end
 end
