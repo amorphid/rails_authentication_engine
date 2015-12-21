@@ -17,8 +17,7 @@ module RailsAuthenticationEngine
             session[:password_reset_token] = nil
             session[:user_id] = @user.id
             flash[:success] = "Password set successfully.  You are now logged in.  Woot!"
-            # binding.pry
-            redirect_to Rails.application.routes.url_helpers.root_path
+            redirect_to main_app.root_path
           else
             render :new
           end
