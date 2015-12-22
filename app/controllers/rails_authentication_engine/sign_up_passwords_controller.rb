@@ -1,5 +1,15 @@
 module RailsAuthenticationEngine
   class SignUpPasswordsController < ApplicationController
+    before_action {
+      if User.exists?(session[:user_id])
+        redirect_to main_app.root_path, {
+          flash: {
+            notice: 'Your password has already been set, and you are logged in!'
+          }
+        }
+      end
+    }
+
     def create
       if PasswordReset.exists?(token: session[:password_reset_token])
         password_reset = PasswordReset.find_by(token: session[:password_reset_token])

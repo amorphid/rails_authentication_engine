@@ -1,0 +1,24 @@
+<h1>Sign In</h1>
+
+<%= form_tag main_app.root_path do %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %>:</h2>
+
+      <ul>
+      <% @user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <p>
+    Email:<br />
+    <%= text_field_tag :email %>
+  </p>
+  <p>
+    Password:<br />
+    <%= text_field_tag :password %>
+  </p>
+  <%= submit_tag "Submit" %>
+<% end %>
