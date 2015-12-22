@@ -7,9 +7,18 @@
     <%= csrf_meta_tags %>
   </head>
   <body>
-    <% if flash[:success] %>
-      <%= flash[:success] %>
-    <% end %>
+  <% if flash[:danger] %>
+    <%= flash[:danger] %>
+  <% end %>
+  <% if flash[:info] %>
+    <%= flash[:info] %>
+  <% end %>
+  <% if flash[:success] %>
+    <%= flash[:success] %>
+  <% end %>
+  <% if flash[:warning] %>
+    <%= flash[:warning] %>
+  <% end %>
     <%= yield %>
   </body>
 </html>

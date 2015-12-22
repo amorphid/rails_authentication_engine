@@ -1,17 +1,7 @@
 <h1>Sign Up</h1>
 
 <%= form_tag sign_up_passwords_path do %>
-  <% if @user.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@user.errors.count, "error") %>:</h2>
-
-      <ul>
-      <% @user.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render 'rails_authentication_engine/shared/errors', errors: @user.errors %>
   <p>
     Password:<br />
     <%= text_field_tag :password %>
