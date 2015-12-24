@@ -1,11 +1,11 @@
-class CreateRailsAuthenticationEngineEmailConfirmations < ActiveRecord::Migration
+class CreateUser < ActiveRecord::Migration
   def change
     create_table *([
-      :rails_authentication_engine_email_confirmations,
+      :users,
       ({ id: :uuid } if ENV['POSTGRESQL_ID'] == 'uuid')
     ]).compact  do |t|
       t.string :email
-      t.string :token
+      t.string :password_digest
 
       t.timestamps null: false
     end

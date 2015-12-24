@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.version     = RailsAuthenticationEngine::VERSION
   s.authors     = ["Michael Pope"]
   s.email       = ['mpope.cr@gmail.com']
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of RailsAuthenticationEngine."
-  s.description = "TODO: Description of RailsAuthenticationEngine."
+  s.homepage    = "https://github.com/SpaceballsThe/rails_authentication_engine"
+  s.summary     = "An authentication engine"
+  s.description = "An authentication engine"
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
