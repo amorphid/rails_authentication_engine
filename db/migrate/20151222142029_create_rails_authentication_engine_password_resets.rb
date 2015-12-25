@@ -5,7 +5,7 @@ class CreateRailsAuthenticationEnginePasswordResets < ActiveRecord::Migration
       ({ id: :uuid } if ENV['POSTGRESQL_ID'] == 'uuid')
     ]).compact  do |t|
       t.string :token
-      t.uuid :email_confirmation_id
+      ENV['POSTGRESQL_ID'] == 'uuid' ? (t.uuid :email_confirmation_id) : (t.integer :email_confirmation_id)
 
       t.timestamps null: false
     end
