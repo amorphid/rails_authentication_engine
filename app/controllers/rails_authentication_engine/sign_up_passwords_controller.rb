@@ -1,14 +1,6 @@
 module RailsAuthenticationEngine
   class SignUpPasswordsController < ApplicationController
-    before_action {
-      if User.exists?(session[:user_id])
-        redirect_to main_app.root_path, {
-          flash: {
-            notice: 'Your password has already been set, and you are logged in!'
-          }
-        }
-      end
-    }
+    prepend_before_action :authenticate_guest!
 
     def create
       if PasswordReset.exists?(token: session[:password_reset_token])
@@ -57,6 +49,16 @@ module RailsAuthenticationEngine
     end
 
     private
+
+    def authenticate_guest!
+      if User.exists?(session[:user_id])
+        redirect_to main_app.root_path, {
+          flash: {
+            notice: 'Your password has already been set, and you are logged in!'
+          }
+        }
+      end
+    end
 
     def user_params
       params.permit(:password)
