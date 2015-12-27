@@ -14,7 +14,7 @@ module RailsAuthenticationEngine
       end
     end
 
-    context 'create' do
+    context 'new' do
       it 'redirects to sign up path for invalid token' do
         get :new, token: SecureRandom.urlsafe_base64(24)
         expect(response).to redirect_to(new_sign_up_email_path)
