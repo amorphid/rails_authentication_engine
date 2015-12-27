@@ -9,5 +9,7 @@ feature 'Sign In' do
     fill_in :password, with: user.password
     click_button 'Submit'
     expect(current_path).to eq(root_path)
+    expect(page.body).to have_content('You are now logged in.  Exciting!')
+    expect(page.body).to have_content('it works!')
   end
 end

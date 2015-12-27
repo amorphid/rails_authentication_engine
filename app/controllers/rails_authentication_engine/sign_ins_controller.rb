@@ -5,6 +5,7 @@ module RailsAuthenticationEngine
 
       if !@user.new_record?
         if @user.authenticate(params[:password])
+          session[:user_id] = @user.id
           redirect_to main_app.root_path, flash: { success: 'You are now logged in.  Exciting!' }
         else
           flash.now[:danger] = "That's the incorrect password for the account with email '#{@user.email}' :P<br />If needed, click <a href='#{}'>here</a> to reset your password!".html_safe
