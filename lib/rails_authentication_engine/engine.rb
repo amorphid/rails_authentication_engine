@@ -3,7 +3,8 @@ module RailsAuthenticationEngine
     isolate_namespace RailsAuthenticationEngine
 
     config.generators do |g|
-      g.test_framework :rspec, :fixture => false
+      g.test_framework      :rspec, fixture: true
+      g.fixture_replacement :fabrication
     end
 
     initializer :append_migrations do |app|

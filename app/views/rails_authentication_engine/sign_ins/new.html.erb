@@ -1,6 +1,6 @@
 <h1>Sign In</h1>
 
-<%= form_tag main_app.root_path do %>
+<%= form_tag sign_ins_path do %>
   <%= render 'rails_authentication_engine/shared/errors', errors: @user.errors %>
   <p>
     Email:<br />
@@ -8,7 +8,7 @@
   </p>
   <p>
     Password:<br />
-    <%= text_field_tag :password %>
+    <%= password_field_tag :password %>
   </p>
   <%= submit_tag "Submit" %>
 <% end %>
