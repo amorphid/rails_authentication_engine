@@ -7,6 +7,10 @@ module RailsAuthenticationEngine
                   :set_user,
                   only: :create
 
+    before_action :vet_email_confirmation_exists_and_set_email_confirmation,
+                  :vet_email_confirmation,
+                  only: :new
+
     def create
       if @user.update(user_params)
         @email_confirmation.password_resets.delete_all
@@ -21,20 +25,8 @@ module RailsAuthenticationEngine
     end
 
     def new
-      if EmailConfirmation.exists?(token: params[:token])
-        email_confirmation = EmailConfirmation.find_by(token: params[:token])
-        if (DateTime.now.utc.to_f - email_confirmation.created_at.to_f) > 86400
-          flash[:error] = "Expired email confirmation link.  Please enter your email to receive another one."
-          redirect_to new_sign_up_email_path
-        else
-          reset = PasswordReset.create(email_confirmation_id: email_confirmation.id)
-          session[:password_reset_token] = reset.token
-          @user = User.new
-          render :new
-        end
-      else
-
-      end
+      session[:password_reset_token] = PasswordReset.create(email_confirmation_id: email_confirmation.id).token
+      @user = User.new
     end
 
     private
@@ -61,6 +53,26 @@ module RailsAuthenticationEngine
       @user = User.find_or_initialize_by(email: email_confirmation.email)
     end
 
+    def vet_email_confirmation
+      email_confirmation_is_expired = (DateTime.now.utc.to_f - email_confirmation.created_at.to_f) >= 86400
+
+      if email_confirmation_is_expired
+        flash[:error] = "Expired email confirmation link.  Please enter your email to receive another one."
+        redirect_to new_sign_up_email_path
+      end
+    end
+
+    def vet_email_confirmation_exists_and_set_email_confirmation
+      confirmation_does_not_exist = !EmailConfirmation.exists?(token: params[:token])
+
+      if confirmation_does_not_exist
+        flash[:error] = "Invalid email confirmation link.  Please enter your email to receive another one."
+        redirect_to new_sign_up_email_path
+      else
+        @email_confirmation = EmailConfirmation.find_by(token: params[:token])
+      end
+    end
+
     def vet_password_reset_and_set_email_confirmation
       password_reset            = PasswordReset.find_by(token: session[:password_reset_token])
       password_reset_is_expired = (DateTime.now.utc.to_f - password_reset.created_at.to_f) > 86400
@@ -77,7 +89,7 @@ module RailsAuthenticationEngine
       password_reset_does_not_exist = !PasswordReset.exists?(token: session[:password_reset_token])
 
       if password_reset_does_not_exist
-        flash[:error] = "Invalid email confirmation link.  Please enter your email to receive another one."
+        flash[:error] = "Invalid password link.  Please enter your email to receive another one."
         redirect_to new_sign_up_email_path
       end
     end
