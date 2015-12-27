@@ -4,6 +4,8 @@ module RailsAuthenticationEngine
 
     belongs_to :email_confirmation
 
+    validates :token, presence: true
+
     private
 
     def initialize_token

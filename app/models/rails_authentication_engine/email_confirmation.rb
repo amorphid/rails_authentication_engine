@@ -5,6 +5,7 @@ module RailsAuthenticationEngine
     has_many :password_resets
 
     validates :email, presence: true
+    validates :token, presence: true
 
     private
 

@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 module RailsAuthenticationEngine
-  RSpec.describe EmailConfirmation, type: :model do
-    pending "add some examples to (or delete) #{__FILE__}"
+  describe EmailConfirmation, type: :model do
+    it { should validate_presence_of(:email) }
+    it { should validate_presence_of(:token) }
   end
 end

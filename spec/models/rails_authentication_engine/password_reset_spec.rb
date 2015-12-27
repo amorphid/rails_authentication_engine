@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 module RailsAuthenticationEngine
-  RSpec.describe PasswordReset, type: :model do
-    pending "add some examples to (or delete) #{__FILE__}"
+  describe PasswordReset, type: :model do
+    it { should validate_presence_of(:token) }
   end
 end
