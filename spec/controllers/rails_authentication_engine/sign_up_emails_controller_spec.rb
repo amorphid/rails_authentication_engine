@@ -15,7 +15,7 @@ module RailsAuthenticationEngine
         expect(response).to render_template(:new)
       end
 
-      it 'has 1 error on model w/ invalid email' do
+      it 'has 1 error on user w/ invalid email' do
         post :create, email: ''
         result = assigns[:email_confirmation].errors.count
         expect(result).to eq(1)

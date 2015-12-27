@@ -13,8 +13,8 @@ module RailsAuthenticationEngine
 
     def create
       if @user.update(user_params)
-        @email_confirmation.password_resets.delete_all
-        @email_confirmation.destroy
+        email_confirmation.password_resets.delete_all
+        email_confirmation.destroy
         session[:password_reset_token] = nil
         session[:user_id] = @user.id
         flash[:success] = "Password set successfully.  You are now logged in.  Woot!"
@@ -75,7 +75,7 @@ module RailsAuthenticationEngine
 
     def vet_password_reset_and_set_email_confirmation
       password_reset            = PasswordReset.find_by(token: session[:password_reset_token])
-      password_reset_is_expired = (DateTime.now.utc.to_f - password_reset.created_at.to_f) > 86400
+      password_reset_is_expired = (DateTime.now.utc.to_f - password_reset.created_at.to_f) >= 86400
 
       if password_reset_is_expired
         flash[:error] = "Expired password link.  Please enter your email to receive another one."
