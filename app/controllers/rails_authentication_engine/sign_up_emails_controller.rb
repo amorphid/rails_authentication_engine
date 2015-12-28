@@ -3,7 +3,7 @@ module RailsAuthenticationEngine
     private
 
     def email_method
-      :email_confirmation
+      :sign_up
     end
   end
 end

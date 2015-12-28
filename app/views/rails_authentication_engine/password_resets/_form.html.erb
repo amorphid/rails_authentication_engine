@@ -1,0 +1,8 @@
+<%= form_tag sign_up_passwords_path do %>
+  <%= render 'rails_authentication_engine/shared/errors', errors: @user.errors %>
+  <p>
+    Password:<br />
+    <%= text_field_tag :password %>
+  </p>
+  <%= submit_tag "Submit" %>
+<% end %>
