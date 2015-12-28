@@ -57,8 +57,8 @@ module RailsAuthenticationEngine
       email_confirmation_is_expired = (DateTime.now.utc.to_f - email_confirmation.created_at.to_f) >= 86400
 
       if email_confirmation_is_expired
-        flash[:error] = "Expired email confirmation link.  Please enter your email to receive another one."
-        redirect_to new_sign_up_email_path
+        flash[:error] = expired_email_confirmation_flash_message
+        redirect_to new_email_confirmation_path_helper
       end
     end
 
@@ -66,8 +66,8 @@ module RailsAuthenticationEngine
       confirmation_does_not_exist = !EmailConfirmation.exists?(token: params[:token])
 
       if confirmation_does_not_exist
-        flash[:error] = "Invalid email confirmation link.  Please enter your email to receive another one."
-        redirect_to new_sign_up_email_path
+        flash[:error] = invalid_email_confirmation_flash_message
+        redirect_to new_email_confirmation_path_helper
       else
         @email_confirmation = EmailConfirmation.find_by(token: params[:token])
       end
@@ -78,8 +78,8 @@ module RailsAuthenticationEngine
       password_reset_is_expired = (DateTime.now.utc.to_f - password_reset.created_at.to_f) >= 86400
 
       if password_reset_is_expired
-        flash[:error] = "Expired password link.  Please enter your email to receive another one."
-        redirect_to new_sign_up_email_path
+        flash[:error] = 'Expired password link.  Please enter your email to receive another one.'
+        redirect_to new_email_confirmation_path_helper
       else
         @email_confirmation = password_reset.email_confirmation
       end
@@ -90,7 +90,7 @@ module RailsAuthenticationEngine
 
       if password_reset_does_not_exist
         flash[:error] = "Invalid password link.  Please enter your email to receive another one."
-        redirect_to new_sign_up_email_path
+        redirect_to new_email_confirmation_path_helper
       end
     end
   end
