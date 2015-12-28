@@ -1,0 +1,8 @@
+<%= form_tag form_path do %>
+  <%= render 'rails_authentication_engine/shared/errors', errors: errors %>
+  <p>
+    Email:<br />
+    <%= text_field_tag :email %>
+  </p>
+  <%= submit_tag "Submit" %>
+<% end %>

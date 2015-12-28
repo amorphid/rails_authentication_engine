@@ -13,6 +13,7 @@ module RailsAuthenticationEngine
 
     def new
       @email_confirmation = EmailConfirmation.new
+      render :new
     end
 
     private

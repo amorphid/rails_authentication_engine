@@ -1,7 +1,7 @@
-<h1>Sign Up</h1>
+<h1>Password Recovery</h1>
 
 <%= render(
   'rails_authentication_engine/email_confirmations/form',
-  form_path: sign_up_emails_path,
+  form_path: password_recovery_emails_path,
   errors:    @email_confirmation.errors
 )%>
