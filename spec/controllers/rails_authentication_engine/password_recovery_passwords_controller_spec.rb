@@ -17,9 +17,11 @@ module RailsAuthenticationEngine
           post :create, password: Faker::Internet.password(7)
         end
 
-        it { expect(response).to redirect_to(new_password_recovery_email_path) }
+        it 'redirects' do
+          expect(response).to redirect_to(new_password_recovery_email_path)
+        end
 
-        it do
+        it 'sets flash message' do
           result  = flash[:danger]
           message = 'rails_authentication_engine.flash.invalid_password_recovery_email'
           expect(result).to eq(I18n.t(message))
@@ -36,9 +38,11 @@ module RailsAuthenticationEngine
 
         after { Timecop.return }
 
-        it { expect(response).to redirect_to(new_password_recovery_email_path) }
+        it 'redirects' do
+          expect(response).to redirect_to(new_password_recovery_email_path)
+        end
 
-        it do
+        it 'sets flash message' do
           result  = flash[:danger]
           message = 'rails_authentication_engine.flash.expired_password_recovery_email'
           expect(result).to eq(I18n.t(message))
@@ -54,19 +58,19 @@ module RailsAuthenticationEngine
 
         after { Timecop.return }
 
-        it do
+        it 'redirects' do
           post :create, password: user.email
           expect(response).to redirect_to(url_helper('main_app.root_path'))
         end
 
-        it do
+        it 'sets flash message' do
           post :create, password: user.email
           result  = flash[:success]
           message = 'rails_authentication_engine.flash.successful_password_recovery'
           expect(result).to eq(I18n.t(message))
         end
 
-        it do
+        it 'does not change User count' do
           expect { post :create, password: user.email }
           .to change { User.count }
           .by(0)
@@ -79,9 +83,11 @@ module RailsAuthenticationEngine
           post :create, password: ''
         end
 
-        it { expect(response).to render_template(:new) }
+        it 'renders new' do
+          expect(response).to render_template(:new)
+        end
 
-        it do
+        it 'has 1 error' do
           result = assigns[:user].errors.count
           expect(result).to eq(1)
         end
@@ -90,10 +96,10 @@ module RailsAuthenticationEngine
       context 'password too short' do
         before do
           session[:password_reset_token] = password_reset_token
-          get :create, password: Faker::Internet.password(7,7)
+          post :create, password: Faker::Internet.password(7,7)
         end
 
-        it do
+        it 'has 1 error' do
           result = assigns[:user].errors.count
           expect(result).to eq(1)
         end
@@ -108,9 +114,11 @@ module RailsAuthenticationEngine
       context 'blank token' do
         before { get :new, token: '' }
 
-        it { expect(response).to redirect_to(new_password_recovery_email_path) }
+        it 'redirects' do
+          expect(response).to redirect_to(new_password_recovery_email_path)
+        end
 
-        it do
+        it 'sets flash message' do
           result  = flash[:danger]
           message = 'rails_authentication_engine.flash.invalid_password_recovery_email'
           expect(result).to eq(I18n.t(message))
@@ -120,9 +128,11 @@ module RailsAuthenticationEngine
       context 'invalid token' do
         before { get :new, token: SecureRandom.urlsafe_base64(24) }
 
-        it { expect(response).to redirect_to(new_password_recovery_email_path) }
+        it 'redirects' do
+          expect(response).to redirect_to(new_password_recovery_email_path)
+        end
 
-        it do
+        it 'sets flash message' do
           result  = flash[:danger]
           message = 'rails_authentication_engine.flash.invalid_password_recovery_email'
           expect(result).to eq(I18n.t(message))
@@ -137,31 +147,46 @@ module RailsAuthenticationEngine
           get :new, token: token
         end
 
-        it { expect(response).to redirect_to(new_password_recovery_email_path) }
+        after { Timecop.return }
 
-        it do
+        it 'redirects' do
+          expect(response).to redirect_to(new_password_recovery_email_path)
+        end
+
+        it 'sets flash message' do
           result  = flash[:danger]
           message = 'rails_authentication_engine.flash.expired_password_recovery_email'
           expect(result).to eq(I18n.t(message))
         end
+      end
+
+      context 'current email confirmation' do
+        let(:token) { email_confirmation.token }
+
+        before do
+          Timecop.freeze(Time.now)
+          token
+          allow_any_instance_of(DateTime).to receive(:to_f).and_return(86_399.seconds.from_now.to_f)
+        end
 
         after { Timecop.return }
-      end
 
-      it 'current email confirmation' do
-        before
-        Timecop.freeze(Time.now)
-        token = email_confirmation.token
-        allow_any_instance_of(DateTime).to receive(:to_f).and_return(86_399.seconds.from_now.to_f)
-        get :new, token: token
-        expect(response).not_to redirect_to(new_sign_up_email_path)
-        Timecop.return
-      end
+        it 'renders new' do
+          get :new, token: token
+          expect(response).to render_template(:new)
+        end
 
-      it 'sets password reset token' do
-        session[:password_reset_token] = nil
-        get :new, token: email_confirmation.token
-        expect(session[:password_reset_token]).not_to eq(nil)
+        it 'increases PasswordReset count by 1' do
+          expect { get :new, token: token }
+          .to change { PasswordReset.count }
+          .by(1)
+        end
+
+        it 'sets password_reset_token in session' do
+          session[:password_reset_token] = nil
+          get :new, token: email_confirmation.token
+          expect(session[:password_reset_token]).to match(/[A-Za-z0-9\-_]+/)
+        end
       end
 
       it_behaves_like 'an authenticated user' do
