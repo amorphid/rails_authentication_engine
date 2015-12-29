@@ -31,16 +31,6 @@ module RailsAuthenticationEngine
 
     private
 
-    def authenticate_guest!
-      if User.exists?(session[:user_id])
-        redirect_to main_app.root_path, {
-          flash: {
-            notice: 'Your password has already been set, and you are logged in!'
-          }
-        }
-      end
-    end
-
     def email_confirmation
       @email_confirmation
     end

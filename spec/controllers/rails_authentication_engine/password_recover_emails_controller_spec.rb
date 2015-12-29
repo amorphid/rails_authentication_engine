@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 module RailsAuthenticationEngine
-  describe SignUpEmailsController, type: :controller do
+  describe PasswordRecoveryEmailsController, type: :controller do
     routes { RailsAuthenticationEngine::Engine.routes }
 
     context '#create' do

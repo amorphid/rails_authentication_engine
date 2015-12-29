@@ -1,0 +1,4 @@
+en:
+  rails_authentication_engine:
+    flash:
+      user_exists: "You are already logged in.  If you'd REALLY like to visit that page, log out first."

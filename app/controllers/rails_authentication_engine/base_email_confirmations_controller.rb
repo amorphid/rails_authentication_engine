@@ -1,5 +1,7 @@
 module RailsAuthenticationEngine
   class BaseEmailConfirmationsController < ApplicationController
+    prepend_before_action :authenticate_guest!
+
     before_action :set_email_confirmation, only: :create
 
     def create
@@ -17,10 +19,6 @@ module RailsAuthenticationEngine
     end
 
     private
-
-    def find_or_initialize_email_confirmation
-
-    end
 
     def set_email_confirmation
       @email_confirmation ||= EmailConfirmation.find_or_initialize_by(email: params[:email])

@@ -8,16 +8,16 @@
   </head>
   <body>
   <% if flash[:danger] %>
-    <%= flash[:danger] %>
+    <%= sanitize(flash[:danger]) %>
   <% end %>
   <% if flash[:info] %>
-    <%= flash[:info] %>
+    <%= sanitize(flash[:info]) %>
   <% end %>
   <% if flash[:success] %>
-    <%= flash[:success] %>
+    <%= sanitize(flash[:success]) %>
   <% end %>
   <% if flash[:warning] %>
-    <%= flash[:warning] %>
+    <%= sanitize(flash[:warning]) %>
   <% end %>
     <%= yield %>
   </body>
