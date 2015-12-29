@@ -21,18 +21,14 @@ module RailsAuthenticationEngine
         expect(result).to eq(1)
       end
 
-      it 'redirects authenticated users to root path' do
-        session[:user_id] = Fabricate(:user).id
-        post :create
-        expect(response).to redirect_to(url_helper('main_app.root_path'))
+      it_behaves_like 'an authenticated user' do
+        let(:action) { post :create }
       end
     end
 
     context '#new' do
-      it 'redirects authenticated users to root path' do
-        session[:user_id] = Fabricate(:user).id
-        get :new
-        expect(response).to redirect_to(url_helper('main_app.root_path'))
+      it_behaves_like 'an authenticated user' do
+        let(:action) { get :new }
       end
     end
   end

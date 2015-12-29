@@ -26,6 +26,22 @@ module RailsAuthenticationEngine
         post :create, email: user.email, password: Faker::Internet.password(8)
         expect(response).to render_template(:new)
       end
+
+      it 'redirects to root path w/ authenticated users' do
+        session[:user_id] = Fabricate(:user).id
+        post :create
+
+      end
+
+      it_behaves_like 'an authenticated user' do
+        let(:action) { post :create }
+      end
+    end
+
+    context 'new' do
+      it_behaves_like 'an authenticated user' do
+        let(:action) { get :new }
+      end
     end
   end
 end

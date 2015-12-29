@@ -1,5 +1,7 @@
 module RailsAuthenticationEngine
   class SignInsController < ApplicationController
+    prepend_before_action :authenticate_guest!
+
     def create
       @user = User.find_or_initialize_by(email: params[:email])
 

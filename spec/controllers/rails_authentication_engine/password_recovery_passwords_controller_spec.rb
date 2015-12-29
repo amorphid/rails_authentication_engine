@@ -1,34 +1,44 @@
 require 'rails_helper'
 
 module RailsAuthenticationEngine
-  describe SignUpPasswordsController, type: :controller do
+  describe PasswordRecoveryPasswordsController, type: :controller do
     routes { RailsAuthenticationEngine::Engine.routes }
 
     let(:email_confirmation)   { Fabricate(:email_confirmation) }
     let(:password_reset_token) { Fabricate(:password_reset).token }
 
-    context 'create' do
-      it 'redirects to sign up path w/ password reset does not exist' do
-        session[:password_reset_token] = nil
-        post :create, password: Faker::Internet.password(7)
-        expect(response).to redirect_to(new_sign_up_email_path)
+    context '#create' do
+      context 'no password reset token' do
+        before do
+          session[:password_reset_token] = nil
+          post :create, password: Faker::Internet.password(7)
+        end
+
+        it { expect(response).to redirect_to(new_password_recovery_email_path) }
+
+        it do
+          expect(flash[:danger])
+          .to eq(I18n.t(
+            'rails_authentication_engine.flash.invalid_password_recovery_email'
+          ))
+        end
       end
 
-      it 'redirects to sign up path w/ password reset is 24 hours old' do
+      it 'redirects to password recovery email path w/ expired password reset' do
         Timecop.freeze(Time.now)
         session[:password_reset_token] = password_reset_token
         allow_any_instance_of(DateTime).to receive(:to_f).and_return(86_400.seconds.from_now.to_f)
         get :create, password: Faker::Internet.password(7)
-        expect(response).to redirect_to(new_sign_up_email_path)
+        expect(response).to redirect_to(new_password_recovery_email_path)
         Timecop.return
       end
 
-      it 'redirects to sign up path w/ password reset is 24 hours old' do
+      it 'redirects to password recovery email path w/ password reset is 24 hours old' do
         Timecop.freeze(Time.now)
         session[:password_reset_token] = password_reset_token
         allow_any_instance_of(DateTime).to receive(:to_f).and_return(86_399.seconds.from_now.to_f)
         get :create, password: Faker::Internet.password(7)
-        expect(response).not_to redirect_to(new_sign_up_email_path)
+        expect(response).not_to redirect_to(new_password_recovery_email_path)
         Timecop.return
       end
 
@@ -45,15 +55,15 @@ module RailsAuthenticationEngine
         expect(result).to eq(2)
       end
 
-      it 'renders new template w/ invalid password' do
+      it 'renders new template w/ incorrect password' do
         session[:password_reset_token] = password_reset_token
-        get :create, password: Faker::Internet.password(6)
+        get :create, password: Faker::Internet.password(8)
         expect(response).to render_template(:new)
       end
 
-      it 'has 1 error on user w/ invalid password' do
+      it 'has 1 error on user w/ too short a password' do
         session[:password_reset_token] = password_reset_token
-        get :create, password: Faker::Internet.password(6)
+        get :create, password: Faker::Internet.password(7,7)
         result = assigns[:user].errors.count
         expect(result).to eq(1)
       end

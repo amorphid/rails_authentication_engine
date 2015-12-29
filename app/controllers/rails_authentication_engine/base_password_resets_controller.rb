@@ -79,7 +79,7 @@ module RailsAuthenticationEngine
       password_reset_does_not_exist = !PasswordReset.exists?(token: session[:password_reset_token])
 
       if password_reset_does_not_exist
-        flash[:error] = "Invalid password link.  Please enter your email to receive another one."
+        flash[:danger] = invalid_email_confirmation_flash_message
         redirect_to new_email_confirmation_path_helper
       end
     end
