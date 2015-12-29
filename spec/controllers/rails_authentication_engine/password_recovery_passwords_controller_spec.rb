@@ -105,9 +105,16 @@ module RailsAuthenticationEngine
     end
 
     context 'new' do
-      it 'redirects to sign up path for invalid token' do
-        get :new, token: SecureRandom.urlsafe_base64(24)
-        expect(response).to redirect_to(new_sign_up_email_path)
+      context 'invalid token' do
+        before { get :new, token: SecureRandom.urlsafe_base64(24) }
+
+        it { expect(response).to redirect_to(new_password_recovery_email_path) }
+
+        it do
+          result  = flash[:danger]
+          message = 'rails_authentication_engine.flash.invalid_password_recovery_email'
+          expect(result).to eq(I18n.t(message))
+        end
       end
 
       it 'redirects to sign up path if email confirmation is 24 hours old' do

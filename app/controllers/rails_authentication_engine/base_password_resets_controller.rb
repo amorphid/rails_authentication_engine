@@ -56,7 +56,7 @@ module RailsAuthenticationEngine
       confirmation_does_not_exist = !EmailConfirmation.exists?(token: params[:token])
 
       if confirmation_does_not_exist
-        flash[:error] = invalid_email_confirmation_flash_message
+        flash[:danger] = invalid_email_confirmation_flash_message
         redirect_to new_email_confirmation_path_helper
       else
         @email_confirmation = EmailConfirmation.find_by(token: params[:token])
