@@ -47,7 +47,7 @@ module RailsAuthenticationEngine
       email_confirmation_is_expired = (DateTime.now.utc.to_f - email_confirmation.created_at.to_f) >= 86400
 
       if email_confirmation_is_expired
-        flash[:error] = expired_email_confirmation_flash_message
+        flash[:danger] = expired_email_confirmation_flash_message
         redirect_to new_email_confirmation_path_helper
       end
     end

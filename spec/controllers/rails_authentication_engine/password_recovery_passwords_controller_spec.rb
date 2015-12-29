@@ -105,6 +105,18 @@ module RailsAuthenticationEngine
     end
 
     context 'new' do
+      context 'blank token' do
+        before { get :new, token: '' }
+
+        it { expect(response).to redirect_to(new_password_recovery_email_path) }
+
+        it do
+          result  = flash[:danger]
+          message = 'rails_authentication_engine.flash.invalid_password_recovery_email'
+          expect(result).to eq(I18n.t(message))
+        end
+      end
+
       context 'invalid token' do
         before { get :new, token: SecureRandom.urlsafe_base64(24) }
 
@@ -117,16 +129,27 @@ module RailsAuthenticationEngine
         end
       end
 
-      it 'redirects to sign up path if email confirmation is 24 hours old' do
-        Timecop.freeze(Time.now)
-        token = email_confirmation.token
-        allow_any_instance_of(DateTime).to receive(:to_f).and_return(86_400.seconds.from_now.to_f)
-        get :new, token: token
-        expect(response).to redirect_to(new_sign_up_email_path)
-        Timecop.return
+      context 'expired email confirmation' do
+        before do
+          Timecop.freeze(Time.now)
+          token = email_confirmation.token
+          allow_any_instance_of(DateTime).to receive(:to_f).and_return(86_400.seconds.from_now.to_f)
+          get :new, token: token
+        end
+
+        it { expect(response).to redirect_to(new_password_recovery_email_path) }
+
+        it do
+          result  = flash[:danger]
+          message = 'rails_authentication_engine.flash.expired_password_recovery_email'
+          expect(result).to eq(I18n.t(message))
+        end
+
+        after { Timecop.return }
       end
 
-      it 'does not redirect if email confirmation is less than 24 hours old' do
+      it 'current email confirmation' do
+        before
         Timecop.freeze(Time.now)
         token = email_confirmation.token
         allow_any_instance_of(DateTime).to receive(:to_f).and_return(86_399.seconds.from_now.to_f)
