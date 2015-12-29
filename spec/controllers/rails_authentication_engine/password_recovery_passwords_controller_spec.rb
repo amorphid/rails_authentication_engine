@@ -73,17 +73,18 @@ module RailsAuthenticationEngine
         end
       end
 
-      it 'renders new template w/ password is blank' do
-        session[:password_reset_token] = password_reset_token
-        get :create, password: ''
-        expect(response).to render_template(:new)
-      end
+      context 'blank password' do
+        before do
+          session[:password_reset_token] = password_reset_token
+          post :create, password: ''
+        end
 
-      it 'has 2 errors on user w/ blank password' do
-        session[:password_reset_token] = password_reset_token
-        get :create, password: ''
-        result = assigns[:user].errors.count
-        expect(result).to eq(2)
+        it { expect(response).to render_template(:new) }
+
+        it do
+          result = assigns[:user].errors.count
+          expect(result).to eq(1)
+        end
       end
 
       it 'renders new template w/ incorrect password' do
