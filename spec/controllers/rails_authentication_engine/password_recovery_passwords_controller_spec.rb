@@ -4,8 +4,11 @@ module RailsAuthenticationEngine
   describe PasswordRecoveryPasswordsController, type: :controller do
     routes { RailsAuthenticationEngine::Engine.routes }
 
-    let(:email_confirmation)   { Fabricate(:email_confirmation) }
-    let(:password_reset_token) { Fabricate(:password_reset).token }
+    let(:email_confirmation)   { Fabricate(:email_confirmation, email: user.email) }
+    let(:password_reset_token) do
+      Fabricate(:password_reset, email_confirmation: email_confirmation).token
+    end
+    let(:user)                 { Fabricate(:user) }
 
     context '#create' do
       context 'no password reset token' do
@@ -28,7 +31,7 @@ module RailsAuthenticationEngine
           Timecop.freeze(Time.now)
           session[:password_reset_token] = password_reset_token
           allow_any_instance_of(DateTime).to receive(:to_f).and_return(86_400.seconds.from_now.to_f)
-          get :create, password: Faker::Internet.password(7)
+          post :create, password: Faker::Internet.password(7)
         end
 
         after { Timecop.return }
@@ -42,13 +45,32 @@ module RailsAuthenticationEngine
         end
       end
 
-      it 'redirects to password recovery email path w/ password reset is 24 hours old' do
-        Timecop.freeze(Time.now)
-        session[:password_reset_token] = password_reset_token
-        allow_any_instance_of(DateTime).to receive(:to_f).and_return(86_399.seconds.from_now.to_f)
-        get :create, password: Faker::Internet.password(7)
-        expect(response).not_to redirect_to(new_password_recovery_email_path)
-        Timecop.return
+      context 'current password reset' do
+        before do
+          Timecop.freeze(Time.now)
+          session[:password_reset_token] = password_reset_token
+          allow_any_instance_of(DateTime).to receive(:to_f).and_return(86_399.seconds.from_now.to_f)
+        end
+
+        after { Timecop.return }
+
+        it do
+          post :create, password: user.email
+          expect(response).to redirect_to(url_helper('main_app.root_path'))
+        end
+
+        it do
+          post :create, password: user.email
+          result  = flash[:success]
+          message = 'rails_authentication_engine.flash.successful_password_recovery'
+          expect(result).to eq(I18n.t(message))
+        end
+
+        it do
+          expect { post :create, password: user.email }
+          .to change { User.count }
+          .by(0)
+        end
       end
 
       it 'renders new template w/ password is blank' do

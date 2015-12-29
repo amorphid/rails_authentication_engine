@@ -17,7 +17,7 @@ module RailsAuthenticationEngine
         email_confirmation.destroy
         session[:password_reset_token] = nil
         session[:user_id] = @user.id
-        flash[:success] = "Password set successfully.  You are now logged in.  Woot!"
+        flash[:success] = successful_email_confirmation_flash_message
         redirect_to main_app.root_path
       else
         render :new
