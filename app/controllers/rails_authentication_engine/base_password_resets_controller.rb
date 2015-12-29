@@ -68,7 +68,7 @@ module RailsAuthenticationEngine
       password_reset_is_expired = (DateTime.now.utc.to_f - password_reset.created_at.to_f) >= 86400
 
       if password_reset_is_expired
-        flash[:error] = 'Expired password link.  Please enter your email to receive another one.'
+        flash[:danger] = expired_email_confirmation_flash_message
         redirect_to new_email_confirmation_path_helper
       else
         @email_confirmation = password_reset.email_confirmation

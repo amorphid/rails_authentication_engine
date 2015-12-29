@@ -17,20 +17,29 @@ module RailsAuthenticationEngine
         it { expect(response).to redirect_to(new_password_recovery_email_path) }
 
         it do
-          expect(flash[:danger])
-          .to eq(I18n.t(
-            'rails_authentication_engine.flash.invalid_password_recovery_email'
-          ))
+          result  = flash[:danger]
+          message = 'rails_authentication_engine.flash.invalid_password_recovery_email'
+          expect(result).to eq(I18n.t(message))
         end
       end
 
-      it 'redirects to password recovery email path w/ expired password reset' do
-        Timecop.freeze(Time.now)
-        session[:password_reset_token] = password_reset_token
-        allow_any_instance_of(DateTime).to receive(:to_f).and_return(86_400.seconds.from_now.to_f)
-        get :create, password: Faker::Internet.password(7)
-        expect(response).to redirect_to(new_password_recovery_email_path)
-        Timecop.return
+      context 'expired password reset' do
+        before do
+          Timecop.freeze(Time.now)
+          session[:password_reset_token] = password_reset_token
+          allow_any_instance_of(DateTime).to receive(:to_f).and_return(86_400.seconds.from_now.to_f)
+          get :create, password: Faker::Internet.password(7)
+        end
+
+        after { Timecop.return }
+
+        it { expect(response).to redirect_to(new_password_recovery_email_path) }
+
+        it do
+          result  = flash[:danger]
+          message = 'rails_authentication_engine.flash.expired_password_recovery_email'
+          expect(result).to eq(I18n.t(message))
+        end
       end
 
       it 'redirects to password recovery email path w/ password reset is 24 hours old' do

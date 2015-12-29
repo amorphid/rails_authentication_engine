@@ -2,4 +2,6 @@ en:
   rails_authentication_engine:
     flash:
       authenticated_user_exists: "You are already logged in.  If you'd REALLY like to visit that page, log out first."
+      expired_password_recovery_email: 'Expired password recovery email link.  Please enter your email to receive another one.'
       invalid_password_recovery_email: 'Invalid password recovery email link.  Please enter your email to receive another one.'
+
