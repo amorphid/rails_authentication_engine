@@ -87,17 +87,16 @@ module RailsAuthenticationEngine
         end
       end
 
-      it 'renders new template w/ incorrect password' do
-        session[:password_reset_token] = password_reset_token
-        get :create, password: Faker::Internet.password(8)
-        expect(response).to render_template(:new)
-      end
+      context 'password too short' do
+        before do
+          session[:password_reset_token] = password_reset_token
+          get :create, password: Faker::Internet.password(7,7)
+        end
 
-      it 'has 1 error on user w/ too short a password' do
-        session[:password_reset_token] = password_reset_token
-        get :create, password: Faker::Internet.password(7,7)
-        result = assigns[:user].errors.count
-        expect(result).to eq(1)
+        it do
+          result = assigns[:user].errors.count
+          expect(result).to eq(1)
+        end
       end
 
       it_behaves_like 'an authenticated user' do
