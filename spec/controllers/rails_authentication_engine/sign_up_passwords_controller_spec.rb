@@ -7,11 +7,16 @@ module RailsAuthenticationEngine
     let(:email_confirmation)   { Fabricate(:email_confirmation) }
     let(:password_reset_token) { Fabricate(:password_reset).token }
 
-    context 'create' do
-      it 'redirects to sign up path w/ password reset does not exist' do
-        session[:password_reset_token] = nil
-        post :create, password: Faker::Internet.password(7)
-        expect(response).to redirect_to(new_sign_up_email_path)
+    context '#create' do
+      context 'no password reset token' do
+        before do
+          session[:password_reset_token] = nil
+          post :create, password: Faker::Internet.password(8)
+        end
+
+        it 'redirects to new_sign_up_email_path' do
+          expect(response).to redirect_to(new_sign_up_email_path)
+        end
       end
 
       it 'redirects to sign up path w/ password reset is 24 hours old' do
