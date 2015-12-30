@@ -3,7 +3,7 @@ module RailsAuthenticationEngine
     private
 
     def expired_email_confirmation_flash_message
-      'Expired password recovery email link.  Please enter your email to receive another one.'
+      t('rails_authentication_engine.flash.expired_sign_up_email')
     end
 
     def invalid_email_confirmation_flash_message

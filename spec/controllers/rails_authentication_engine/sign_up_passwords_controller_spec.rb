@@ -25,16 +25,26 @@ module RailsAuthenticationEngine
         end
       end
 
-      # context 'no password reset token' do
-      #   before do
-      #     session[:password_reset_token] = nil
-      #     post :create, password: Faker::Internet.password(8)
-      #   end
+      context 'expired password reset' do
+        before do
+          Timecop.freeze(Time.now)
+          session[:password_reset_token] = password_reset_token
+          allow_any_instance_of(DateTime).to receive(:to_f).and_return(86_400.seconds.from_now.to_f)
+          post :create, password: Faker::Internet.password(8)
+        end
 
-      #   it 'redirects to new_sign_up_email_path' do
-      #     expect(response).to redirect_to(new_sign_up_email_path)
-      #   end
-      # end
+        after { Timecop.return }
+
+        it 'redirects to new_sign_up_email_path' do
+          expect(response).to redirect_to(new_sign_up_email_path)
+        end
+
+        it 'sets flash message' do
+          result  = flash[:danger]
+          message = 'rails_authentication_engine.flash.expired_sign_up_email'
+          expect(result).to eq(I18n.t(message))
+        end
+      end
 
       it 'redirects to sign up path w/ password reset is 24 hours old' do
         Timecop.freeze(Time.now)

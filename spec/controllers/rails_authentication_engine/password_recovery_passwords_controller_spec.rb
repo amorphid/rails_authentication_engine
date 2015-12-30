@@ -38,7 +38,7 @@ module RailsAuthenticationEngine
 
         after { Timecop.return }
 
-        it 'redirects' do
+        it 'redirects to new_password_recovery_email_path' do
           expect(response).to redirect_to(new_password_recovery_email_path)
         end
 
