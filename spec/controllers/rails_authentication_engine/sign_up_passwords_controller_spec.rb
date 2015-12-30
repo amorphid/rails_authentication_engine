@@ -74,31 +74,36 @@ module RailsAuthenticationEngine
         end
       end
 
+      context 'blank password' do
+        before do
+          session[:password_reset_token] = password_reset_token
+          post :create, password: ''
+        end
 
-      it 'renders new template w/ password is blank' do
-        session[:password_reset_token] = password_reset_token
-        get :create, password: ''
-        expect(response).to render_template(:new)
+        it 'renders new' do
+          expect(response).to render_template(:new)
+        end
+
+        it 'has 2 errors' do
+          result = assigns[:user].errors.count
+          expect(result).to eq(2)
+        end
       end
 
-      it 'has 2 errors on user w/ blank password' do
-        session[:password_reset_token] = password_reset_token
-        get :create, password: ''
-        result = assigns[:user].errors.count
-        expect(result).to eq(2)
-      end
+      context 'password too short' do
+        before do
+          session[:password_reset_token] = password_reset_token
+          post :create, password: Faker::Internet.password(7,7)
+        end
 
-      it 'renders new template w/ invalid password' do
-        session[:password_reset_token] = password_reset_token
-        get :create, password: Faker::Internet.password(6)
-        expect(response).to render_template(:new)
-      end
+        it 'renders new' do
+          expect(response).to render_template(:new)
+        end
 
-      it 'has 1 error on user w/ invalid password' do
-        session[:password_reset_token] = password_reset_token
-        get :create, password: Faker::Internet.password(6)
-        result = assigns[:user].errors.count
-        expect(result).to eq(1)
+        it 'has 1 error' do
+          result = assigns[:user].errors.count
+          expect(result).to eq(1)
+        end
       end
 
       it_behaves_like 'an authenticated user' do

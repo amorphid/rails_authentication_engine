@@ -99,6 +99,10 @@ module RailsAuthenticationEngine
           post :create, password: Faker::Internet.password(7,7)
         end
 
+        it 'renders new' do
+          expect(response).to render_template(:new)
+        end
+
         it 'has 1 error' do
           result = assigns[:user].errors.count
           expect(result).to eq(1)
