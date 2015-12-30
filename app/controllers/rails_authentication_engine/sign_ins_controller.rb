@@ -15,7 +15,8 @@ module RailsAuthenticationEngine
         render :new
       when @user.authenticate(params[:password])
         session[:user_id] = @user.id
-        redirect_to main_app.root_path, flash: { success: 'You are now logged in.  Exciting!' }
+        flash[:success]   = t('rails_authentication_engine.flash.successful_sign_in')
+        redirect_to main_app.root_path
       else
         flash.now[:danger] = "That's the incorrect password for the account with email '#{@user.email}' :P<br />If needed, click <a href='#{}'>here</a> to reset your password!".html_safe
         render :new
