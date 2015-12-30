@@ -3,5 +3,6 @@ en:
     flash:
       authenticated_user_exists: "You are already logged in.  If you'd REALLY like to visit that page, log out first."
       expired_password_recovery_email: 'Expired password recovery email link.  Please enter your email to receive another one.'
+      invalid_sign_up_email:  'Invalid sign up email link.  Please enter your email to receive another one.'
       invalid_password_recovery_email: 'Invalid password recovery email link.  Please enter your email to receive another one.'
       successful_password_recovery: 'You new password has been set, are now logged in.  N-I-C-E!'

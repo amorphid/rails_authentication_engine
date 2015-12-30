@@ -14,10 +14,27 @@ module RailsAuthenticationEngine
           post :create, password: Faker::Internet.password(8)
         end
 
-        it 'redirects to new_sign_up_email_path' do
+        it 'redirects to new_password_recovery_email_path' do
           expect(response).to redirect_to(new_sign_up_email_path)
         end
+
+        it 'sets flash message' do
+          result  = flash[:danger]
+          message = 'rails_authentication_engine.flash.invalid_sign_up_email'
+          expect(result).to eq(I18n.t(message))
+        end
       end
+
+      # context 'no password reset token' do
+      #   before do
+      #     session[:password_reset_token] = nil
+      #     post :create, password: Faker::Internet.password(8)
+      #   end
+
+      #   it 'redirects to new_sign_up_email_path' do
+      #     expect(response).to redirect_to(new_sign_up_email_path)
+      #   end
+      # end
 
       it 'redirects to sign up path w/ password reset is 24 hours old' do
         Timecop.freeze(Time.now)

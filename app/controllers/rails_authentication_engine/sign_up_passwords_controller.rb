@@ -7,7 +7,7 @@ module RailsAuthenticationEngine
     end
 
     def invalid_email_confirmation_flash_message
-      'Invalid password recovery email link.  Please enter your email to receive another one.'
+      t('rails_authentication_engine.flash.invalid_sign_up_email')
     end
 
     def new_email_confirmation_path_helper
