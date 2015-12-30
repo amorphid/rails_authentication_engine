@@ -1,5 +1,5 @@
 module RailsAuthenticationEngine
-  class PasswordRecoveryEmailsController < BaseEmailConfirmationsController
+  class PasswordRecoveryEmailsController < RailsAuthenticationEngine::BaseEmailConfirmationsController
     private
 
     def email_method

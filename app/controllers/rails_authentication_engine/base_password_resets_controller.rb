@@ -1,5 +1,5 @@
 module RailsAuthenticationEngine
-  class BasePasswordResetsController < ApplicationController
+  class BasePasswordResetsController < RailsAuthenticationEngine::ApplicationController
     prepend_before_action :authenticate_guest!
 
     before_action :vet_password_reset_exists,

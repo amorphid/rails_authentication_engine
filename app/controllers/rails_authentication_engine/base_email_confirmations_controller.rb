@@ -1,5 +1,5 @@
 module RailsAuthenticationEngine
-  class BaseEmailConfirmationsController < ApplicationController
+  class BaseEmailConfirmationsController < RailsAuthenticationEngine::ApplicationController
     prepend_before_action :authenticate_guest!
 
     before_action :set_email_confirmation, only: :create

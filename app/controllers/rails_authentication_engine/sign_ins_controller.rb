@@ -1,5 +1,5 @@
 module RailsAuthenticationEngine
-  class SignInsController < ApplicationController
+  class SignInsController < RailsAuthenticationEngine::ApplicationController
     prepend_before_action :authenticate_guest!
 
     def create

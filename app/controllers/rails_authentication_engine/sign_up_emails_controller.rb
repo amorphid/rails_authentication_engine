@@ -1,5 +1,5 @@
 module RailsAuthenticationEngine
-  class SignUpEmailsController < BaseEmailConfirmationsController
+  class SignUpEmailsController < RailsAuthenticationEngine::BaseEmailConfirmationsController
     private
 
     def email_method
