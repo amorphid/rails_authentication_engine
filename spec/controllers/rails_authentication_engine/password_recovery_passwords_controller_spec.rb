@@ -118,7 +118,7 @@ module RailsAuthenticationEngine
       context 'blank token' do
         before { get :new, token: '' }
 
-        it 'redirects' do
+        it 'redirects to new_password_recovery_email_path' do
           expect(response).to redirect_to(new_password_recovery_email_path)
         end
 
