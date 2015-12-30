@@ -58,7 +58,7 @@ module RailsAuthenticationEngine
 
         after { Timecop.return }
 
-        it 'redirects' do
+        it 'redirects to main_app.root_path' do
           post :create, password: user.email
           expect(response).to redirect_to(url_helper('main_app.root_path'))
         end

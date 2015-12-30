@@ -10,7 +10,7 @@ module RailsAuthenticationEngine
       t('rails_authentication_engine.flash.invalid_password_recovery_email')
     end
 
-    def successful_email_confirmation_flash_message
+    def successful_password_reset_flash_message
       t('rails_authentication_engine.flash.successful_password_recovery')
     end
 

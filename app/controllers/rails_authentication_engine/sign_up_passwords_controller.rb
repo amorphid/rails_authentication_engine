@@ -13,5 +13,9 @@ module RailsAuthenticationEngine
     def new_email_confirmation_path_helper
       new_sign_up_email_path
     end
+
+    def successful_password_reset_flash_message
+      t('rails_authentication_engine.flash.successful_sign_up')
+    end
   end
 end

@@ -46,23 +46,34 @@ module RailsAuthenticationEngine
         end
       end
 
-      it 'redirects to sign up path w/ password reset is 24 hours old' do
-        Timecop.freeze(Time.now)
-        session[:password_reset_token] = password_reset_token
-        allow_any_instance_of(DateTime).to receive(:to_f).and_return(86_400.seconds.from_now.to_f)
-        get :create, password: Faker::Internet.password(7)
-        expect(response).to redirect_to(new_sign_up_email_path)
-        Timecop.return
+      context 'current password reset' do
+        before do
+          Timecop.freeze(Time.now)
+          session[:password_reset_token] = password_reset_token
+          allow_any_instance_of(DateTime).to receive(:to_f).and_return(86_399.seconds.from_now.to_f)
+        end
+
+        after { Timecop.return }
+
+        it 'redirects to main_app.root_path' do
+          post :create, password: Faker::Internet.password(8)
+          expect(response).to redirect_to(url_helper('main_app.root_path'))
+        end
+
+        it 'sets flash message' do
+          post :create, password: Faker::Internet.password(8)
+          result  = flash[:success]
+          message = 'rails_authentication_engine.flash.successful_sign_up'
+          expect(result).to eq(I18n.t(message))
+        end
+
+        it 'increases User count by 1' do
+          expect { post :create, password: Faker::Internet.password(8) }
+          .to change { User.count }
+          .by(1)
+        end
       end
 
-      it 'redirects to sign up path w/ password reset is 24 hours old' do
-        Timecop.freeze(Time.now)
-        session[:password_reset_token] = password_reset_token
-        allow_any_instance_of(DateTime).to receive(:to_f).and_return(86_399.seconds.from_now.to_f)
-        get :create, password: Faker::Internet.password(7)
-        expect(response).not_to redirect_to(new_sign_up_email_path)
-        Timecop.return
-      end
 
       it 'renders new template w/ password is blank' do
         session[:password_reset_token] = password_reset_token
