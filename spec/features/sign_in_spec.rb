@@ -8,7 +8,7 @@ feature 'Sign In' do
     fill_in :email, with: user.email
     fill_in :password, with: user.password
     click_button 'Submit'
-    expect(current_path).to eq(root_path)
+    expect(current_path).to eq(main_app.root_path)
     expect(page.body).to have_content(I18n.t('rails_authentication_engine.flash.successful_sign_in'))
     expect(page.body).to have_content('it works!')
   end

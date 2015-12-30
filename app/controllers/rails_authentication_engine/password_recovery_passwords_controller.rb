@@ -2,7 +2,7 @@ module RailsAuthenticationEngine
   class PasswordRecoveryPasswordsController < RailsAuthenticationEngine::BasePasswordResetsController
     private
 
-    def  expired_email_confirmation_flash_message
+    def expired_email_confirmation_flash_message
       t('rails_authentication_engine.flash.expired_password_recovery_email')
     end
 

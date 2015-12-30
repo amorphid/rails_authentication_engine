@@ -12,7 +12,7 @@ feature 'Sign Up' do
     current_email.click_link('click here')
     fill_in :password, with: password
     click_button 'Submit'
-    expect(current_path).to eq(root_path)
+    expect(current_path).to eq(main_app.root_path)
     expect(page.body).to have_content(I18n.t('rails_authentication_engine.flash.successful_sign_up'))
     expect(page.body).to have_content('it works!')
   end
