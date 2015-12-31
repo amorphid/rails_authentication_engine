@@ -2,17 +2,13 @@ module RailsAuthenticationEngine
   class SignInsController < RailsAuthenticationEngine::ApplicationController
     prepend_before_action :authenticate_guest!
 
-    def create
-      @user = User.find_or_initialize_by(email: params[:email])
+    before_action :set_user,
+                  :vet_email_params,
+                  :vet_user,
+                  only: :create
 
+    def create
       case
-      when params[:email].blank?
-        @user.password = params[:password]
-        @user.valid?
-        render :new
-      when @user.new_record?
-        flash.now[:danger] = "We don't have an account for email '#{@user.email}' :P  If needed, you can sign up <a href='#{new_sign_up_email_path}'>here</a>!".html_safe
-        render :new
       when @user.authenticate(params[:password])
         session[:user_id] = @user.id
         flash[:success]   = t('rails_authentication_engine.sign_in.success')
@@ -25,6 +21,31 @@ module RailsAuthenticationEngine
 
     def new
       @user = User.new
+    end
+
+    private
+
+    def set_user
+      @user ||= User.find_or_initialize_by(email: params[:email])
+    end
+
+    def vet_user
+      is_not_existing_user = @user.new_record?
+
+      if is_not_existing_user
+        flash.now[:danger] = t('rails_authentication_engine.sign_in.no_account', email: @user.email, path: new_sign_up_email_path)
+        render :new
+      end
+    end
+
+    def vet_email_params
+      no_email_provided = params[:email].blank?
+
+      if no_email_provided
+        @user.password = params[:password]
+        @user.valid?
+        render :new
+      end
     end
   end
 end

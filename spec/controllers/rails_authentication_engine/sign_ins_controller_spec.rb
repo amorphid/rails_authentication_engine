@@ -7,14 +7,30 @@ module RailsAuthenticationEngine
     let(:user) { Fabricate(:user) }
 
     context '#create' do
+      context 'no account' do
+        let(:email) { Faker::Internet.email }
+
+        before { post :create, email: email }
+
+        it 'renders new' do
+          expect(response).to render_template(:new)
+        end
+
+        it 'sets flash message' do
+          i18n_key = 'rails_authentication_engine.sign_in.no_account'
+          i18n_params = {
+            email: email,
+            path: new_sign_up_email_path
+          }
+          message = I18n.t(i18n_key, i18n_params)
+          # expect(message).to eq(flash.now[:danger])
+          expect(message).not_to eq(i18n_missing_translation(i18n_key))
+        end
+      end
+
       it 'redirects w/ valid login' do
         post :create, email: user.email, password: user.password
         expect(response).to redirect_to(url_helper('main_app.root_path'))
-      end
-
-      it 'renders new w/ blank email and/or password' do
-        post :create, email: '', password: ''
-        expect(response).to render_template(:new)
       end
 
       it 'renders new w/ invalid email' do

@@ -213,7 +213,7 @@ module RailsAuthenticationEngine
             { email: email }
           )
           expect(flash.now[:info]).to eq(message)
-          expect(I18n.t(message)).not_to eq(i18n_missing_translation(message))
+          expect(message).not_to eq(i18n_missing_translation(message))
         end
       end
 
