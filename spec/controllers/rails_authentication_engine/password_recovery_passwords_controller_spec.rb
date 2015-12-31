@@ -124,8 +124,8 @@ module RailsAuthenticationEngine
 
         it 'sets flash message' do
           result  = flash[:danger]
-          message = 'rails_authentication_engine.flash.invalid_password_recovery_email'
-          expect(result).not_to eq(nil)
+          message = 'rails_authentication_engine.password_recovery.invalid'
+          expect(I18n.t(message)).not_to eq(i18n_missing_translation(message))
         end
       end
 
@@ -138,8 +138,8 @@ module RailsAuthenticationEngine
 
         it 'sets flash message' do
           result  = flash[:danger]
-          message = 'rails_authentication_engine.flash.invalid_password_recovery_email'
-          expect(result).not_to eq(nil)
+          message = 'rails_authentication_engine.password_recovery.invalid'
+          expect(I18n.t(message)).not_to eq(i18n_missing_translation(message))
         end
       end
 
