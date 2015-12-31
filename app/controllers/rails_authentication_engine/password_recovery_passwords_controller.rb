@@ -3,11 +3,11 @@ module RailsAuthenticationEngine
     private
 
     def expired_email_confirmation_flash_message
-      t('rails_authentication_engine.flash.expired_password_recovery_email')
+      t('rails_authentication_engine.password_recovery.expired')
     end
 
     def invalid_email_confirmation_flash_message
-      t('rails_authentication_engine.flash.invalid_password_recovery_email')
+      t('rails_authentication_engine.password_recovery.invalid')
     end
 
     def new_email_confirmation_path_helper
@@ -19,14 +19,14 @@ module RailsAuthenticationEngine
 
       if is_a_new_user
         flash.now[:info] = t(
-          'rails_authentication_engine.flash.new_user_password_reset_flash_message',
+          'rails_authentication_engine.password_recovery.new_user',
           email: user.email
         )
       end
     end
 
     def successful_password_reset_flash_message
-      t('rails_authentication_engine.flash.successful_password_recovery')
+      t('rails_authentication_engine.password_recovery.success')
     end
   end
 end
