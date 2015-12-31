@@ -159,8 +159,8 @@ module RailsAuthenticationEngine
 
         it 'sets flash message' do
           result  = flash[:danger]
-          message = 'rails_authentication_engine.flash.expired_password_recovery_email'
-          expect(result).not_to eq(nil)
+          message = 'rails_authentication_engine.password_recovery.expired'
+          expect(I18n.t(message)).not_to eq(i18n_missing_translation(message))
         end
       end
 
