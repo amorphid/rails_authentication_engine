@@ -14,15 +14,13 @@ module RailsAuthenticationEngine
       new_password_recovery_email_path
     end
 
-    def set_and_notify_user
-      email         = email_confirmation.email
-      @user         = User.find_or_initialize_by(email: email)
-      is_a_new_user = @user.new_record?
+    def notify_user
+      is_a_new_user = user.new_record?
 
       if is_a_new_user
         flash.now[:info] = t(
           'rails_authentication_engine.flash.new_user_password_reset_flash_message',
-          email: email
+          email: user.email
         )
       end
     end

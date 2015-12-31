@@ -20,7 +20,7 @@ module RailsAuthenticationEngine
       if is_an_existing_user
         flash.now[:info] = t(
           'rails_authentication_engine.flash.existing_user_sign_up_flash_message',
-          email: email_confirmation.email
+          email: user.email
         )
       end
     end
