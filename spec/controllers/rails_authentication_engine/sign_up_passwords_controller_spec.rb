@@ -190,6 +190,32 @@ module RailsAuthenticationEngine
         end
       end
 
+      context 'new user' do
+        before { get :new, token: email_confirmation.token }
+
+        it 'does not flash message' do
+          expect(flash.now[:info]).to eq(nil)
+        end
+      end
+
+      context 'existing user' do
+        let(:email) { email_confirmation.email }
+
+        before do
+          Fabricate(:user, email: email)
+          get :new, token: email_confirmation.token
+        end
+
+        it 'set flash message' do
+          result  = flash.now[:info]
+          message = I18n.t(
+            'rails_authentication_engine.flash.existing_user_sign_up_flash_message',
+            email: email
+          )
+          expect(result).to eq(message)
+        end
+      end
+
       it_behaves_like 'an authenticated user' do
         let(:action) { get :new }
       end

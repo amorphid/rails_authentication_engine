@@ -4,15 +4,16 @@ module RailsAuthenticationEngine
 
     before_action :vet_password_reset_exists,
                   :vet_password_reset_and_set_email_confirmation,
-                  :set_user,
                   only: :create
 
     before_action :vet_email_confirmation_exists_and_set_email_confirmation,
                   :vet_email_confirmation,
                   only: :new
 
+    append_before_action :notify_user
+
     def create
-      if @user.update(user_params)
+      if user.update(user_params)
         email_confirmation.password_resets.delete_all
         email_confirmation.destroy
         session[:password_reset_token] = nil
@@ -25,8 +26,9 @@ module RailsAuthenticationEngine
     end
 
     def new
-      session[:password_reset_token] = PasswordReset.create(email_confirmation_id: email_confirmation.id).token
-      @user = User.new
+      session[:password_reset_token] = PasswordReset
+                                       .create(email_confirmation_id: email_confirmation.id)
+                                       .token
     end
 
     private
@@ -35,32 +37,12 @@ module RailsAuthenticationEngine
       @email_confirmation
     end
 
+    def user
+      @user ||= User.find_or_initialize_by(email: email_confirmation.email)
+    end
+
     def user_params
       params.permit(:password)
-    end
-
-    def set_user
-      @user = User.find_or_initialize_by(email: email_confirmation.email)
-    end
-
-    def vet_email_confirmation
-      email_confirmation_is_expired = (DateTime.now.utc.to_f - email_confirmation.created_at.to_f) >= 86400
-
-      if email_confirmation_is_expired
-        flash[:danger] = expired_email_confirmation_flash_message
-        redirect_to new_email_confirmation_path_helper
-      end
-    end
-
-    def vet_email_confirmation_exists_and_set_email_confirmation
-      confirmation_does_not_exist = !EmailConfirmation.exists?(token: params[:token])
-
-      if confirmation_does_not_exist
-        flash[:danger] = invalid_email_confirmation_flash_message
-        redirect_to new_email_confirmation_path_helper
-      else
-        @email_confirmation = EmailConfirmation.find_by(token: params[:token])
-      end
     end
 
     def vet_password_reset_and_set_email_confirmation
@@ -81,6 +63,26 @@ module RailsAuthenticationEngine
       if password_reset_does_not_exist
         flash[:danger] = invalid_email_confirmation_flash_message
         redirect_to new_email_confirmation_path_helper
+      end
+    end
+
+    def vet_email_confirmation
+      email_confirmation_is_expired = (DateTime.now.utc.to_f - email_confirmation.created_at.to_f) >= 86400
+
+      if email_confirmation_is_expired
+        flash[:danger] = expired_email_confirmation_flash_message
+        redirect_to new_email_confirmation_path_helper
+      end
+    end
+
+    def vet_email_confirmation_exists_and_set_email_confirmation
+      confirmation_does_not_exist = !EmailConfirmation.exists?(token: params[:token])
+
+      if confirmation_does_not_exist
+        flash[:danger] = invalid_email_confirmation_flash_message
+        redirect_to new_email_confirmation_path_helper
+      else
+        @email_confirmation = EmailConfirmation.find_by(token: params[:token])
       end
     end
   end

@@ -14,6 +14,17 @@ module RailsAuthenticationEngine
       new_sign_up_email_path
     end
 
+    def notify_user
+      is_an_existing_user = !user.new_record?
+
+      if is_an_existing_user
+        flash.now[:info] = t(
+          'rails_authentication_engine.flash.existing_user_sign_up_flash_message',
+          email: email_confirmation.email
+        )
+      end
+    end
+
     def successful_password_reset_flash_message
       t('rails_authentication_engine.flash.successful_sign_up')
     end
