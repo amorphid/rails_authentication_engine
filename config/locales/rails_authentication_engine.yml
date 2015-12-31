@@ -2,13 +2,14 @@ en:
   rails_authentication_engine:
     flash:
       authenticated_user_exists: "You are already logged in.  If you'd REALLY like to visit that page, log out first."
-      existing_user_sign_up: "Hey!  There's an existing account for '%{email}'.  Enter a password, and we'll set it for you."
-      expired_sign_ip_email: 'Expired sign up email link.  Please enter your email to receive another one.'
-      invalid_sign_up_email:  'Invalid sign up email link.  Please enter your email to receive another one.'
-      successful_sign_up: "You are now signed up, and you're logged in, too.  N-I-C-E!"
       successful_sign_in: 'You are now logged in.  Exciting!'
     password_recovery:
       expired: 'Expired password recovery email link.  Please enter your email to receive another one.'
       invalid: 'Invalid password recovery email link.  Please enter your email to receive another one.'
       new_user: "There's no existing account for '%{email}'.  Enter a password, and we'll create one for you."
       success: "You new password has been set, and you're are now logged in.  N-I-C-E!"
+    sign_up:
+      existing_user: "Hey!  There's an existing account for '%{email}'.  Enter a password, and we'll set it for you."
+      expired: 'Expired sign up email link.  Please enter your email to receive another one.'
+      invalid:  'Invalid sign up email link.  Please enter your email to receive another one.'
+      success: "You are now signed up, and you're logged in, too.  N-I-C-E!"

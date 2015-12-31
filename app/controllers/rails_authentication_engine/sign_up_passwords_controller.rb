@@ -3,11 +3,11 @@ module RailsAuthenticationEngine
     private
 
     def expired_email_confirmation_flash_message
-      t('rails_authentication_engine.flash.expired_sign_up_email')
+      t('rails_authentication_engine.sign_up.expired')
     end
 
     def invalid_email_confirmation_flash_message
-      t('rails_authentication_engine.flash.invalid_sign_up_email')
+      t('rails_authentication_engine.sign_up.invalid')
     end
 
     def new_email_confirmation_path_helper
@@ -19,14 +19,14 @@ module RailsAuthenticationEngine
 
       if is_an_existing_user
         flash.now[:info] = t(
-          'rails_authentication_engine.flash.existing_user_sign_up_flash_message',
+          'rails_authentication_engine.sign_up.existing_user',
           email: user.email
         )
       end
     end
 
     def successful_password_reset_flash_message
-      t('rails_authentication_engine.flash.successful_sign_up')
+      t('rails_authentication_engine.sign_up.success')
     end
   end
 end
