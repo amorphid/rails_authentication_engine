@@ -14,7 +14,7 @@ feature 'Sign Up' do
     fill_in :password, with: new_password
     click_button 'Submit'
     expect(current_path).to eq(main_app.root_path)
-    expect(page.body).to have_content(I18n.t('rails_authentication_engine.flash.successful_password_recovery'))
+    expect(page.body).to have_content(I18n.t('rails_authentication_engine.password_recovery.success'))
     expect(page.body).to have_content('it works!')
   end
 end
