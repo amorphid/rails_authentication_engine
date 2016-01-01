@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-shared_examples 'an authenticated user' do
+shared_examples 'an authenticated user visiting a page for guests' do
   before do
     session[:user_id] = Fabricate(:user).id
     action

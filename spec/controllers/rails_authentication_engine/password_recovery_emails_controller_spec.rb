@@ -21,13 +21,13 @@ module RailsAuthenticationEngine
         expect(result).to eq(1)
       end
 
-      it_behaves_like 'an authenticated user' do
+      it_behaves_like 'an authenticated user visiting a page for guests' do
         let(:action) { post :create }
       end
     end
 
     context '#new' do
-      it_behaves_like 'an authenticated user' do
+      it_behaves_like 'an authenticated user visiting a page for guests' do
         let(:action) { get :new }
       end
     end

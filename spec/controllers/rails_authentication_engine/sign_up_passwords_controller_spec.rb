@@ -107,7 +107,7 @@ module RailsAuthenticationEngine
         end
       end
 
-      it_behaves_like 'an authenticated user' do
+      it_behaves_like 'an authenticated user visiting a page for guests' do
         let(:action) { post :create }
       end
     end
@@ -217,7 +217,7 @@ module RailsAuthenticationEngine
         end
       end
 
-      it_behaves_like 'an authenticated user' do
+      it_behaves_like 'an authenticated user visiting a page for guests' do
         let(:action) { get :new }
       end
     end
