@@ -2,3 +2,4 @@ module RailsAuthenticationEngine
 end
 
 require 'rails_authentication_engine/engine'
+require 'rails_authentication_engine/authentication_helpers'
