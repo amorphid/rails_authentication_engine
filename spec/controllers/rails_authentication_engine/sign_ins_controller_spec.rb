@@ -29,8 +29,9 @@ module RailsAuthenticationEngine
       end
 
       it 'redirects w/ valid login' do
-        post :create, email: user.email, password: user.password
-        expect(response).to redirect_to(url_helper('main_app.root_path'))
+        continue_url = Faker::Internet.url
+        post :create, email: user.email, password: user.password, continue_url: continue_url
+        expect(response).to redirect_to(continue_url)
       end
 
       it 'renders new w/ invalid email' do

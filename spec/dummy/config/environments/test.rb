@@ -11,6 +11,9 @@ Rails.application.configure do
   config.serve_static_files = true
   config.static_cache_control = 'public, max-age=3600'
 
+  # default url
+  config.action_controller.default_url_options = { host: 'www.example.com', port: 80 }
+
   # email
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3001 }
+  config.action_mailer.default_url_options = { host: 'www.example.com', port: 80 }
 end

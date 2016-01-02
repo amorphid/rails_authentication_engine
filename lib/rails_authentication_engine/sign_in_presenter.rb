@@ -9,7 +9,7 @@ module RailsAuthenticationEngine
       private
 
       def continue_url(hash)
-        hash.fetch(:continue_url, '')
+        hash.fetch(:continue_url, main_app.root_path)
       end
 
       def fetch_user(hash)
@@ -18,6 +18,10 @@ module RailsAuthenticationEngine
 
       def hash_ish(hash)
         HashIsh.new(hash)
+      end
+
+      def main_app
+        Rails.application.routes.url_helpers
       end
 
       def presenter(hash)
