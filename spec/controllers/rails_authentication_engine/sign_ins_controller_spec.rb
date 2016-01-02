@@ -23,7 +23,7 @@ module RailsAuthenticationEngine
             path: new_sign_up_email_path
           }
           message = I18n.t(i18n_key, i18n_params)
-          # expect(message).to eq(flash.now[:danger])
+          expect(message).to eq(flash.now[:danger])
           expect(message).not_to eq(i18n_missing_translation(i18n_key))
         end
       end

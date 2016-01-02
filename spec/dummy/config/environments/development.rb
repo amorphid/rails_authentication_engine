@@ -9,8 +9,11 @@ Rails.application.configure do
   config.consider_all_requests_local = true
   config.eager_load = false
 
+  # default url options (allows for use of `root_url` helper)
+  Rails.application.routes.default_url_options = { host: 'localhost', port: 3000 }
+
   # email
   config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default_url_options = { host: 'localhost:3000' }
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 end

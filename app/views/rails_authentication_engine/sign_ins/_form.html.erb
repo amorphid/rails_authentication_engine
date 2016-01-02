@@ -3,7 +3,7 @@
   <%= hidden_field_tag :continue_url, continue_url %>
   <p>
     Email:<br />
-    <%= text_field_tag :email, value: user.email, placeholder: '' %>
+    <%= text_field_tag :email, user.email %>
   </p>
   <p>
     Password: <br />

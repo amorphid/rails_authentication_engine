@@ -1,16 +1,15 @@
 module RailsAuthenticationEngine
   class SignInsController < RailsAuthenticationEngine::ApplicationController
-    prepend_before_action :authenticate_guest!
+    prepend_before_action :set_presenter, :authenticate_guest!
 
-    before_action :set_user,
-                  :vet_email_params,
+    before_action :vet_email_params,
                   :vet_user,
                   only: :create
 
     def create
       case
-      when @user.authenticate(params[:password])
-        session[:user_id] = @user.id
+      when user.authenticate(params[:password])
+        session[:user_id] = user.id
         flash[:success]   = t('rails_authentication_engine.sign_in.success')
         redirect_to params[:continue_url]
       else
@@ -20,12 +19,15 @@ module RailsAuthenticationEngine
     end
 
     def new
-      @presenter = SignInPresenter.present(continue_url: params[:continue], user: @user)
     end
 
     private
 
-    def set_user
+    def set_presenter
+      @presenter ||= SignInPresenter.present(continue_url: params[:continue_url], user: user)
+    end
+
+    def user
       @user ||= User.find_or_initialize_by(email: params[:email])
     end
 
@@ -33,7 +35,7 @@ module RailsAuthenticationEngine
       is_not_existing_user = @user.new_record?
 
       if is_not_existing_user
-        flash.now[:danger] = t('rails_authentication_engine.sign_in.no_account', email: @user.email, path: new_sign_up_email_path)
+        flash.now[:danger] = t('rails_authentication_engine.sign_in.no_account', email: user.email, path: new_sign_up_email_path)
         render :new
       end
     end
@@ -42,8 +44,8 @@ module RailsAuthenticationEngine
       no_email_provided = params[:email].blank?
 
       if no_email_provided
-        @user.password = params[:password]
-        @user.valid?
+        user.password = params[:password]
+        user.valid?
         render :new
       end
     end
