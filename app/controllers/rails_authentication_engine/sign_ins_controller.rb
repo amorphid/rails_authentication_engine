@@ -12,7 +12,10 @@ module RailsAuthenticationEngine
         flash[:success]   = t('rails_authentication_engine.sign_in.success')
         redirect_to params[:continue_url]
       else
-        flash.now[:danger] = "That's the incorrect password for the account with email '#{@user.email}' :P<br />If needed, click <a href='#{}'>here</a> to reset your password!".html_safe
+        flash.now[:danger] = t('rails_authentication_engine.sign_in.invalid_password', {
+          email: user.email,
+          path:  new_password_recovery_email_path
+        })
         render :new
       end
     end
@@ -34,7 +37,7 @@ module RailsAuthenticationEngine
       is_not_existing_user = @user.new_record?
 
       if is_not_existing_user
-        flash.now[:danger] = t('rails_authentication_engine.sign_in.no_account', email: user.email, path: new_sign_up_email_path)
+        flash.now[:danger] = t('rails_authentication_engine.sign_in.invalid_email', email: user.email, path: new_sign_up_email_path)
         render :new
       end
     end

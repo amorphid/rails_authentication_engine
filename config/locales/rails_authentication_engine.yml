@@ -8,7 +8,8 @@ en:
       new_user: "There's no existing account for '%{email}'.  Enter a password, and we'll create one for you."
       success: "You new password has been set, and you're are now logged in.  N-I-C-E!"
     sign_in:
-      no_account: "We don't have an account for email '%{email}' :P  If needed, you can sign up <a href='%{path}'>here</a>!"
+      invalid_password: "That's the incorrect password for the account with email '%{@user.email}' :P<br />If needed, click <a href='%{path}'>here</a> to reset your password!"
+      invalid_email: "We don't have an account for email '%{email}' :P  If needed, you can sign up <a href='%{path}'>here</a>!"
       success: 'You are now logged in.  Exciting!'
     sign_up:
       existing_user: "Hey!  There's an existing account for '%{email}'.  Enter a password, and we'll set it for you."

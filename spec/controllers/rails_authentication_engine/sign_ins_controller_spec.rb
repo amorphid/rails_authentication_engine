@@ -7,7 +7,7 @@ module RailsAuthenticationEngine
     let(:user) { Fabricate(:user) }
 
     context '#create' do
-      context 'no account' do
+      context 'invalid email' do
         let(:email) { Faker::Internet.email }
 
         before { post :create, email: email }
@@ -17,7 +17,7 @@ module RailsAuthenticationEngine
         end
 
         it 'sets flash message' do
-          i18n_key = 'rails_authentication_engine.sign_in.no_account'
+          i18n_key = 'rails_authentication_engine.sign_in.invalid_email'
           i18n_params = {
             email: email,
             path: new_sign_up_email_path
@@ -27,7 +27,7 @@ module RailsAuthenticationEngine
         end
       end
 
-      context 'valid login' do
+      context 'valid email, valid password' do
         def post_params(continue_url = main_app.root_url)
           session[:user_id] = nil
           post :create, email: user.email, password: user.password, continue_url: continue_url
@@ -56,20 +56,22 @@ module RailsAuthenticationEngine
         end
       end
 
-      it 'renders new w/ invalid email' do
-        post :create, email: Faker::Internet.email, password: ''
-        expect(response).to render_template(:new)
-      end
+      context 'valid email, invalid password' do
+        before do
+          post :create, email: user.email, password: Faker::Internet.password(8)
+        end
 
-      it 'renders new w/ valid email and invalid password' do
-        post :create, email: user.email, password: Faker::Internet.password(8)
-        expect(response).to render_template(:new)
-      end
+        it 'renders new' do
+          expect(response).to render_template(:new)
+        end
 
-      it 'redirects to root path w/ authenticated users' do
-        session[:user_id] = Fabricate(:user).id
-        post :create
-
+        it 'sets flash message' do
+          message = t('rails_authentication_engine.sign_in.invalid_password', {
+            email: user.email,
+            path:  new_password_recovery_email_path
+          })
+          expect(message).to eq(flash[:danger])
+        end
       end
 
       it_behaves_like 'an authenticated user visiting a page for guests' do
