@@ -10,9 +10,14 @@ module RailsAuthenticationEngine
     def create
       case
       when @user.authenticate(params[:password])
-        session[:user_id] = @user.id
-        flash[:success]   = t('rails_authentication_engine.sign_in.success')
-        redirect_to main_app.root_path
+        session[:user_id]           = @user.id
+        flash[:success]             = t('rails_authentication_engine.sign_in.success')
+
+        if params[:continue_url].present?
+          redirect_to params[:continue_url]
+        else
+          redirect_to main_app.root_path
+        end
       else
         flash.now[:danger] = "That's the incorrect password for the account with email '#{@user.email}' :P<br />If needed, click <a href='#{}'>here</a> to reset your password!".html_safe
         render :new
@@ -20,7 +25,7 @@ module RailsAuthenticationEngine
     end
 
     def new
-      @user = User.new
+      @presenter = SignInPresenter.present(continue_url: params[:continue], user: @user)
     end
 
     private

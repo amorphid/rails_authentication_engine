@@ -1,0 +1,20 @@
+<%= form_tag sign_ins_path do %>
+  <%= render 'rails_authentication_engine/shared/errors', errors: user.error_messages %>
+  <%= hidden_field_tag :continue_url, continue_url %>
+  <p>
+    Email:<br />
+    <%= text_field_tag :email, value: user.email, placeholder: '' %>
+  </p>
+  <p>
+    Password: <br />
+    <%= password_field_tag :password %>
+  </p>
+  <%= submit_tag "Submit" %>
+<% end %>
+
+<p>
+  <%= link_to "Forgot password?", new_password_recovery_email_path %>
+</p>
+<p>
+  <%= link_to "Need an account?", new_sign_up_email_path %>
+</p>

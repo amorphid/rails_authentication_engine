@@ -3,13 +3,21 @@ require 'rails_helper'
 feature 'Sign In' do
   given(:user) { Fabricate(:user) }
 
-  scenario 'takes used to root page w/ valid email & password' do
-    visit rails_authentication_engine.new_sign_in_path
-    fill_in :email, with: user.email
-    fill_in :password, with: user.password
-    click_button 'Submit'
-    expect(current_path).to eq(main_app.root_path)
-    expect(page.body).to have_content(I18n.t('rails_authentication_engine.sign_in.success'))
-    expect(page.body).to have_content('it works!')
+  context 'w/ valid email & password' do
+    scenario 'takes user to root page w/ valid email & password' do
+      visit root_path
+      fill_in :email, with: user.email
+      fill_in :password, with: user.password
+      click_button 'Submit'
+      expect(page.body).to have_content('Rooty McRoot')
+    end
+
+    scenario 'takes user to page' do
+      visit pagey_mc_page_path
+      fill_in :email, with: user.email
+      fill_in :password, with: user.password
+      click_button 'Submit'
+      expect(page.body).to have_content('Pagey McPage')
+    end
   end
 end
