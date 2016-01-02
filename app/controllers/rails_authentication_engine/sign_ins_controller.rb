@@ -7,8 +7,7 @@ module RailsAuthenticationEngine
                   only: :create
 
     def create
-      case
-      when user.authenticate(params[:password])
+      if user.authenticate(params[:password])
         session[:user_id] = user.id
         flash[:success]   = t('rails_authentication_engine.sign_in.success')
         redirect_to params[:continue_url]

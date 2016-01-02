@@ -20,8 +20,7 @@ module RailsAuthenticationEngine
 
         it 'sets flash message' do
           message = 'rails_authentication_engine.sign_up.invalid'
-          expect(flash[:danger]).to eq(I18n.t(message))
-          expect(I18n.t(message)).not_to eq(i18n_missing_translation(message))
+          expect(flash[:danger]).to eq(t(message))
         end
       end
 
@@ -41,8 +40,7 @@ module RailsAuthenticationEngine
 
         it 'sets flash message' do
           message = 'rails_authentication_engine.sign_up.expired'
-          expect(flash[:danger]).to eq(I18n.t(message))
-          expect(I18n.t(message)).not_to eq(i18n_missing_translation(message))
+          expect(flash[:danger]).to eq(t(message))
         end
       end
 
@@ -57,15 +55,13 @@ module RailsAuthenticationEngine
 
         it 'redirects to main_app.root_path' do
           post :create, password: Faker::Internet.password(8)
-          expect(response).to redirect_to(url_helper('main_app.root_path'))
+          expect(response).to redirect_to(main_app.root_path)
         end
 
         it 'sets flash message' do
           post :create, password: Faker::Internet.password(8)
           message = 'rails_authentication_engine.sign_up.success'
-          expect(flash[:success]).to eq(I18n.t(message))
-          expect(I18n.t(message)).not_to eq(i18n_missing_translation(message))
-
+          expect(flash[:success]).to eq(t(message))
         end
 
         it 'increases User count by 1' do
@@ -122,8 +118,7 @@ module RailsAuthenticationEngine
 
         it 'sets flash message' do
           message = 'rails_authentication_engine.sign_up.invalid'
-          expect(flash[:danger]).to eq(I18n.t(message))
-          expect(I18n.t(message)).not_to eq(i18n_missing_translation(message))
+          expect(flash[:danger]).to eq(t(message))
         end
       end
 
@@ -136,8 +131,7 @@ module RailsAuthenticationEngine
 
         it 'sets flash message' do
           message = 'rails_authentication_engine.sign_up.invalid'
-          expect(flash[:danger]).to eq(I18n.t(message))
-          expect(I18n.t(message)).not_to eq(i18n_missing_translation(message))
+          expect(flash[:danger]).to eq(t(message))
         end
       end
 
@@ -157,8 +151,7 @@ module RailsAuthenticationEngine
 
         it 'sets flash message' do
           message = 'rails_authentication_engine.sign_up.expired'
-          expect(flash[:danger]).to eq(I18n.t(message))
-          expect(I18n.t(message)).not_to eq(i18n_missing_translation(message))
+          expect(flash[:danger]).to eq(t(message))
         end
       end
 
@@ -208,12 +201,11 @@ module RailsAuthenticationEngine
         end
 
         it 'set flash message' do
-          message = I18n.t(
+          message = t(
             'rails_authentication_engine.sign_up.existing_user',
             { email: email }
           )
           expect(flash.now[:info]).to eq(message)
-          expect(message).not_to eq(i18n_missing_translation(message))
         end
       end
 

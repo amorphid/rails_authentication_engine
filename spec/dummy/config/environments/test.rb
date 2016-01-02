@@ -11,8 +11,12 @@ Rails.application.configure do
   config.serve_static_files = true
   config.static_cache_control = 'public, max-age=3600'
 
+  # default url options (allows for use of `root_url` helper)
   Rails.application.routes.default_url_options = { host: 'www.example.com', port: 80 }
 
   # email
   config.action_mailer.default_url_options = { host: 'www.example.com', port: 80 }
+
+  # I18n
+  config.action_view.raise_on_missing_translations = true
 end

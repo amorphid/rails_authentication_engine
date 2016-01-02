@@ -23,8 +23,7 @@ module RailsAuthenticationEngine
 
         it 'sets flash message' do
           message = 'rails_authentication_engine.password_recovery.invalid'
-          expect(flash[:danger]).to eq(I18n.t(message))
-          expect(I18n.t(message)).not_to eq(i18n_missing_translation(message))
+          expect(flash[:danger]).to eq(t(message))
         end
       end
 
@@ -44,8 +43,7 @@ module RailsAuthenticationEngine
 
         it 'sets flash message' do
           message = 'rails_authentication_engine.password_recovery.expired'
-          expect(flash[:danger]).to eq(I18n.t(message))
-          expect(I18n.t(message)).not_to eq(i18n_missing_translation(message))
+          expect(flash[:danger]).to eq(t(message))
         end
       end
 
@@ -60,14 +58,13 @@ module RailsAuthenticationEngine
 
         it 'redirects to main_app.root_path' do
           post :create, password: user.email
-          expect(response).to redirect_to(url_helper('main_app.root_path'))
+          expect(response).to redirect_to(main_app.root_path)
         end
 
         it 'sets flash message' do
           post :create, password: user.email
           message = 'rails_authentication_engine.password_recovery.success'
-          expect(flash[:success]).to eq(I18n.t(message))
-          expect(I18n.t(message)).not_to eq(i18n_missing_translation(message))
+          expect(flash[:success]).to eq(t(message))
         end
 
         it 'does not change User count' do
@@ -125,7 +122,6 @@ module RailsAuthenticationEngine
         it 'sets flash message' do
           result  = flash[:danger]
           message = 'rails_authentication_engine.password_recovery.invalid'
-          expect(I18n.t(message)).not_to eq(i18n_missing_translation(message))
         end
       end
 
@@ -139,7 +135,6 @@ module RailsAuthenticationEngine
         it 'sets flash message' do
           result  = flash[:danger]
           message = 'rails_authentication_engine.password_recovery.invalid'
-          expect(I18n.t(message)).not_to eq(i18n_missing_translation(message))
         end
       end
 
@@ -160,7 +155,6 @@ module RailsAuthenticationEngine
         it 'sets flash message' do
           result  = flash[:danger]
           message = 'rails_authentication_engine.password_recovery.expired'
-          expect(I18n.t(message)).not_to eq(i18n_missing_translation(message))
         end
       end
 
@@ -203,12 +197,11 @@ module RailsAuthenticationEngine
         end
 
         it 'set flash message' do
-          message = I18n.t(
+          message = t(
             'rails_authentication_engine.password_recovery.new_user',
             email: email
           )
           expect(flash.now[:info]).to eq(message)
-          expect(I18n.t(message)).not_to eq(i18n_missing_translation(message))
         end
       end
 

@@ -16,4 +16,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+  # I18n
+  config.action_view.raise_on_missing_translations = true
 end

@@ -22,16 +22,38 @@ module RailsAuthenticationEngine
             email: email,
             path: new_sign_up_email_path
           }
-          message = I18n.t(i18n_key, i18n_params)
+          message = t(i18n_key, i18n_params)
           expect(message).to eq(flash.now[:danger])
-          expect(message).not_to eq(i18n_missing_translation(i18n_key))
         end
       end
 
-      it 'redirects w/ valid login' do
-        continue_url = Faker::Internet.url
-        post :create, email: user.email, password: user.password, continue_url: continue_url
-        expect(response).to redirect_to(continue_url)
+      context 'valid login' do
+        def post_params(continue_url = main_app.root_url)
+          session[:user_id] = nil
+          post :create, email: user.email, password: user.password, continue_url: continue_url
+        end
+
+        it 'redirects to main_app.root_url' do
+          post_params(main_app.root_url)
+          expect(response).to redirect_to(main_app.root_url)
+        end
+
+        it 'redirects to main_app.pagey_mc_page_url' do
+          post_params(main_app.pagey_mc_page_url)
+          expect(response).to redirect_to(main_app.pagey_mc_page_url)
+        end
+
+        it 'sets user id session' do
+          post_params
+          expect(session[:user_id]).to eq(user.id)
+        end
+
+        it 'set flash message' do
+          post_params
+          i18n_key = 'rails_authentication_engine.sign_in.success'
+          message = t(i18n_key)
+          expect(message).to eq(flash[:success])
+        end
       end
 
       it 'renders new w/ invalid email' do
