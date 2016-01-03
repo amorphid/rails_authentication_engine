@@ -80,6 +80,11 @@ module RailsAuthenticationEngine
     end
 
     context 'new' do
+      it 'renders new' do
+        get :new
+        expect(response).to render_template(:new)
+      end
+
       it_behaves_like 'an authenticated user visiting a page for guests' do
         let(:action) { get :new }
       end
