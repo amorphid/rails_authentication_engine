@@ -3,10 +3,9 @@ module RailsAuthenticationEngine
     prepend_before_action :set_sign_in_manager,
                           :authenticate_guest!
 
-    before_action :vet_email_params,
-                  :vet_user,
+    before_action :vet_email!,
+                  :vet_user!,
                   only: :create
-
 
     def create
       if user.authenticate(params[:password])
@@ -33,7 +32,7 @@ module RailsAuthenticationEngine
     end
 
     def set_sign_in_manager
-      @sign_in_manager = SignInManager.new(self, params)
+      @sign_in_manager = SignInManager.new(self, sign_up_params)
     end
 
     def continue_url
@@ -48,26 +47,19 @@ module RailsAuthenticationEngine
       params.permit(:continue_url, :email, :password)
     end
 
-    def user
-      @user ||= User.find_or_initialize_by(email: email)
-    end
 
-    def vet_user
-      is_not_existing_user = user.new_record?
 
-      if is_not_existing_user
+    def vet_user!
+      if sign_in_manager.new_record?
+
         flash.now[:danger] = t('rails_authentication_engine.sign_in.invalid_email', email: user.email, path: new_sign_up_email_path)
         render :new, locals: { presenter: presenter }
       end
     end
 
-    def vet_email_params
-      no_email_provided = params[:email].blank?
-
-      if no_email_provided
-        user.password = params[:password]
-        user.valid?
-        render :new, locals: { presenter: presenter }
+    def vet_email!
+      unless sign_in_manager.email_valid?
+        sign_in_manager.validate_user_and_render_new
       end
     end
   end
@@ -78,8 +70,18 @@ module RailsAuthenticationEngine
       @params     = params
     end
 
+    def email_valid?
+      email.present?
+    end
+
     def render_new
       controller.render :new, locals: { presenter: presenter }
+    end
+
+    def validate_user_and_render_new
+      user.password = password
+      user.valid?
+      render_new
     end
 
     private
@@ -97,6 +99,10 @@ module RailsAuthenticationEngine
 
     def user
       @user ||= User.find_or_initialize_by(email: email)
+    end
+
+    def password
+      @password ||= params[:password]
     end
 
     def presenter

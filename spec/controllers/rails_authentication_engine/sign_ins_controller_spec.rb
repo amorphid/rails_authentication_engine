@@ -6,6 +6,14 @@ module RailsAuthenticationEngine
 
     let(:user) { Fabricate(:user) }
 
+    context '#vet_email!' do
+      before { post :create, email: '' }
+
+      it 'renders new' do
+        expect(response).to render_template(:new)
+      end
+    end
+
     context '#create' do
       context 'invalid email' do
         let(:email) { Faker::Internet.email }
