@@ -1,17 +1,12 @@
 module RailsAuthenticationEngine
   module SignIn
-    class Manager
-      def initialize(controller, params)
-        @controller = controller
-        @params     = params
-      end
-
+    module Manager
       def email_invalid?
         email.blank?
       end
 
       def render_new
-        controller.render :new, locals: { presenter: presenter }
+        render :new, locals: { presenter: presenter }
       end
 
       def render_new_for_invalid_email
@@ -21,29 +16,25 @@ module RailsAuthenticationEngine
       end
 
       def render_new_for_invalid_user
-        controller.flash.now[:danger] = t('rails_authentication_engine.sign_in.invalid_email', {
+        flash.now[:danger] = t('rails_authentication_engine.sign_in.invalid_email', {
           email: user.email,
-          path: controller.new_sign_up_email_path
+          path: new_sign_up_email_path
         })
         render_new
       end
 
       def render_new_for_unauthenticated_user
-        controller.flash.now[:danger] = t('rails_authentication_engine.sign_in.invalid_password', {
+        flash.now[:danger] = t('rails_authentication_engine.sign_in.invalid_password', {
             email: user.email,
-            path:  controller.new_password_recovery_email_path
+            path:  new_password_recovery_email_path
           })
         render_new
       end
 
       def redirect_to_continue_url
-        controller.session[:user_id] = user.id
-        controller.flash[:success]   = t('rails_authentication_engine.sign_in.success')
-        controller.redirect_to continue_url
-      end
-
-      def t(*args)
-        controller.t(*args)
+        session[:user_id] = user.id
+        flash[:success]   = t('rails_authentication_engine.sign_in.success')
+        redirect_to continue_url
       end
 
       def user_authenticate?
@@ -60,11 +51,8 @@ module RailsAuthenticationEngine
 
       private
 
-      attr_reader :controller,
-                  :params
-
       def continue_url
-        @continue_url ||= params[:continue_url] || controller.main_app.root_url
+        @continue_url ||= params[:continue_url] || main_app.root_url
       end
 
       def email
