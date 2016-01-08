@@ -15,10 +15,26 @@ module RailsAuthenticationEngine
 
     def new
       @email_confirmation = EmailConfirmation.new
-      render :new
+      render_new
     end
 
     private
+
+    def email_confirmation
+      @email_confirmation
+    end
+
+    def email_confirmation_params
+      params.permit(:email)
+    end
+
+    def presenter
+      EmailConfirmationPresenter.present(email_confirmation)
+    end
+
+    def render_new
+      render :new, locals: { presenter: presenter }
+    end
 
     def vet_and_set_email_confirmation
       email_confirmation            = EmailConfirmation.find_or_initialize_by(email: params[:email])
@@ -30,10 +46,6 @@ module RailsAuthenticationEngine
       else
         email_confirmation
       end
-    end
-
-    def email_confirmation_params
-      params.permit(:email)
     end
   end
 end
