@@ -1,6 +1,5 @@
 module RailsAuthenticationEngine
   class SignInsController < RailsAuthenticationEngine::ApplicationController
-    # include SignIn::Manager
 
     prepend_before_action :authenticate_guest!
 
@@ -10,6 +9,7 @@ module RailsAuthenticationEngine
 
     def create
       if user_authenticate?
+        set_session_user_id
         redirect_to_continue_url
       else
         render_new_for_unauthenticated_user
@@ -34,48 +34,90 @@ module RailsAuthenticationEngine
       email.blank?
     end
 
+    def flash_now(type: nil, message: nil)
+      if type && message
+        flash.now[type] = message
+      end
+    end
+
+    def invalid_user_message
+      t('rails_authentication_engine.sign_in.invalid_email', {
+        email: user.email,
+        path: new_sign_up_email_path
+      })
+    end
+
+    def invalid_user_alert
+      {
+        type:    :danger,
+        message: invalid_user_message
+      }
+    end
+
     def password
       @password ||= params[:password]
     end
 
     def presenter
-      SignIn::Presenter.present(continue_url: continue_url, user: user)
+      SignInPresenter.present(continue_url: continue_url, user: user)
     end
 
-    def render_new
-      render :new, locals: { presenter: presenter }
+    def render_new(alert = {})
+      render_type({
+        type:  :new,
+        alert: alert
+      })
     end
 
     def render_new_for_invalid_email
-      user.password = password
-      user.valid?
+      trigger_user_errors
       render_new
     end
 
     def render_new_for_invalid_user
-      flash.now[:danger] = t('rails_authentication_engine.sign_in.invalid_email', {
-        email: user.email,
-        path: new_sign_up_email_path
-      })
-      render_new
+      render_new(invalid_user_alert)
     end
 
     def render_new_for_unauthenticated_user
-      flash.now[:danger] = t('rails_authentication_engine.sign_in.invalid_password', {
-          email: user.email,
-          path:  new_password_recovery_email_path
-        })
-      render_new
+      render_new(unauthenticated_user_alert)
+    end
+
+    def render_type(type:, alert:)
+      flash_now(alert)
+      render(type, locals: { presenter: presenter })
     end
 
     def redirect_to_continue_url
+      redirect_to(continue_url, flash: {
+        success: t('rails_authentication_engine.sign_in.success')
+      })
+    end
+
+    def set_session_user_id
       session[:user_id] = user.id
-      flash[:success]   = t('rails_authentication_engine.sign_in.success')
-      redirect_to continue_url
     end
 
     def sign_up_params
       params.permit(:continue_url, :email, :password)
+    end
+
+    def trigger_user_errors
+      user.password = password
+      user.valid?
+    end
+
+    def unauthenticated_user_alert
+      {
+        type:    :danger,
+        message: unauthenticated_user_message
+      }
+    end
+
+    def unauthenticated_user_message
+      t('rails_authentication_engine.sign_in.invalid_password', {
+        email: user.email,
+        path:  new_password_recovery_email_path
+      })
     end
 
     def user
