@@ -1,6 +1,5 @@
 module RailsAuthenticationEngine
   class SignInsController < RailsAuthenticationEngine::ApplicationController
-
     prepend_before_action :authenticate_guest!
 
     before_action :vet_email!,
@@ -34,11 +33,7 @@ module RailsAuthenticationEngine
       email.blank?
     end
 
-    def flash_now(type: nil, message: nil)
-      if type && message
-        flash.now[type] = message
-      end
-    end
+
 
     def invalid_user_message
       t('rails_authentication_engine.sign_in.invalid_email', {
@@ -62,13 +57,6 @@ module RailsAuthenticationEngine
       SignInPresenter.present(continue_url, user)
     end
 
-    def render_new(alert = {})
-      render_type({
-        type:  :new,
-        alert: alert
-      })
-    end
-
     def render_new_for_invalid_email
       trigger_user_errors
       render_new
@@ -80,11 +68,6 @@ module RailsAuthenticationEngine
 
     def render_new_for_unauthenticated_user
       render_new(unauthenticated_user_alert)
-    end
-
-    def render_type(type:, alert:)
-      flash_now(alert)
-      render(type, locals: { presenter: presenter })
     end
 
     def redirect_to_continue_url

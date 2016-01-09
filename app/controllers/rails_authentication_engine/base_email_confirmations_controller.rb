@@ -2,45 +2,57 @@ module RailsAuthenticationEngine
   class BaseEmailConfirmationsController < RailsAuthenticationEngine::ApplicationController
     prepend_before_action :authenticate_guest!
 
-    before_action :vet_and_set_email_confirmation, only: :create
-
     def create
-      if @email_confirmation.update(email_confirmation_params)
-        UserMailer.send(email_method, @email_confirmation).deliver_now
-        render :show
+      if email_confirmation.update(email_confirmation_params)
+        UserMailer.send(email_method, email_confirmation).deliver_now
+        render_show
       else
-        render :new
+        render_new
       end
     end
 
     def new
-      @email_confirmation = EmailConfirmation.new
       render_new
     end
 
     private
 
+    def email
+      @email ||= params[:email] || ''
+    end
+
+    def email_present?
+      email.present?
+    end
+
     def email_confirmation
-      @email_confirmation
+      @email_confirmation ||= if email_present?
+        vetted_email_confirmation
+      else
+        new_email_comfirmation
+      end
     end
 
     def email_confirmation_params
       params.permit(:email)
     end
 
+    def email_confirmation_expired?(email_confirmation)
+      (DateTime.now.utc.to_f - email_confirmation.created_at.to_f) >= 86400
+    end
+
+    def new_email_comfirmation
+      EmailConfirmation.new
+    end
+
     def presenter
-      EmailConfirmationPresenter.present(email_confirmation)
+      EmailConfirmationPresenter.present(sign_up_emails_path, email_confirmation)
     end
 
-    def render_new
-      render :new, locals: { presenter: presenter }
-    end
+    def vetted_email_confirmation
+      email_confirmation = EmailConfirmation.find_or_initialize_by(email: params[:email])
 
-    def vet_and_set_email_confirmation
-      email_confirmation            = EmailConfirmation.find_or_initialize_by(email: params[:email])
-      email_confirmation_is_expired = (DateTime.now.utc.to_f - email_confirmation.created_at.to_f) >= 86400
-
-      @email_confirmation ||= if email_confirmation_is_expired
+      if email_confirmation_expired?(email_confirmation)
         email_confirmation.destroy
         EmailConfirmation.new(email: params[:email])
       else

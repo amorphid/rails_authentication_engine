@@ -3,9 +3,10 @@ module RailsAuthenticationEngine
     class << self
       private
 
-      def presenter(model)
+      def presenter(path, model)
         {
-          email_confirmation: parse_model(model)
+          form_path:           path,
+          email_confirmation:  parse_model(model)
         }
       end
     end
