@@ -4,7 +4,7 @@ module RailsAuthenticationEngine
 
     def create
       if email_confirmation.update(email_confirmation_params)
-        UserMailer.send(email_method, email_confirmation).deliver_now
+        send_email_confirmation_email
         render_show
       else
         render_new
@@ -47,6 +47,12 @@ module RailsAuthenticationEngine
 
     def presenter
       EmailConfirmationPresenter.present(sign_up_emails_path, email_confirmation)
+    end
+
+    def send_email_confirmation_email
+      UserMailer
+      .send(mailer_method, email_confirmation)
+      .send(deliver_mail_now_or_later)
     end
 
     def vetted_email_confirmation
