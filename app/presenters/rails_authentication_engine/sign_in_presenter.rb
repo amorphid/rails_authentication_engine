@@ -1,21 +1,12 @@
 module RailsAuthenticationEngine
-  module SignInPresenter
-    def self.present(hash = {})
-      hash_ish(
-        presenter(hash))
-    end
-
+  class SignInPresenter < BasePresenter
     class << self
       private
-
-      def hash_ish(hash)
-        HashIsh.new(hash)
-      end
 
       def presenter(continue_url:, user:)
         {
           continue_url: continue_url,
-          user:         parse_user(user)
+          user:         parse_model(user)
         }
       end
 
