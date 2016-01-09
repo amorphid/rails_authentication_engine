@@ -59,7 +59,7 @@ module RailsAuthenticationEngine
     end
 
     def presenter
-      SignInPresenter.present(continue_url: continue_url, user: user)
+      SignInPresenter.present(continue_url, user)
     end
 
     def render_new(alert = {})

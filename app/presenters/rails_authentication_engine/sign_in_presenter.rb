@@ -3,17 +3,10 @@ module RailsAuthenticationEngine
     class << self
       private
 
-      def presenter(continue_url:, user:)
+      def presenter(url, model)
         {
-          continue_url: continue_url,
-          user:         parse_model(user)
-        }
-      end
-
-      def parse_user(user)
-        {
-          email:          user.email,
-          error_messages: user.errors.full_messages
+          continue_url: url,
+          user:         parse_model(model)
         }
       end
     end
