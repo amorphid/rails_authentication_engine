@@ -21,5 +21,9 @@ module RailsAuthenticationEngine
         session[:user_id] = nil
       end
     end
+
+    def session_user_id_set
+      session[:user_id] = user.id
+    end
   end
 end

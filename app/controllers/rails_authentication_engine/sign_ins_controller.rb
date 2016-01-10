@@ -8,7 +8,7 @@ module RailsAuthenticationEngine
 
     def create
       if user_authenticate?
-        set_session_user_id
+        session_user_id_set
         redirect_to_continue_url
       else
         render_new_for_unauthenticated_user
@@ -74,10 +74,6 @@ module RailsAuthenticationEngine
       })
     end
 
-    def set_session_user_id
-      session[:user_id] = user.id
-    end
-
     def sign_up_params
       params.permit(:continue_url, :email, :password)
     end
@@ -110,10 +106,6 @@ module RailsAuthenticationEngine
     end
 
     def user_invalid?
-      user.new_record?
-    end
-
-    def user_new?
       user.new_record?
     end
 

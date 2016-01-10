@@ -14,12 +14,13 @@ module RailsAuthenticationEngine
 
     def create
       if user.update(user_params)
-        email_confirmation.password_resets.delete_all
-        email_confirmation.destroy
-        session[:password_reset_token] = nil
-        session[:user_id] = @user.id
-        flash[:success] = successful_password_reset_alert
-        redirect_to main_app.root_path
+        email_confirmation_destroy
+        session_password_reset_totken_destroy
+        session_user_id_set
+        redirect_with_alert({
+          alert: successful_password_reset_alert,
+          path:  main_app.root_path
+        })
       else
         render :new
       end
@@ -37,12 +38,20 @@ module RailsAuthenticationEngine
       @_email_confirmation
     end
 
+    def email_confirmation_destroy
+      email_confirmation.destroy
+    end
+
     def email_confirmation_exists?
       EmailConfirmation.exists?(token: params[:token])
     end
 
     def email_confirmation_expired?
       (DateTime.now.utc.to_f - email_confirmation.created_at.to_f) >= 86400
+    end
+
+    def session_password_reset_totken_destroy
+      session[:password_reset_token] = nil
     end
 
     def password_reset
@@ -57,8 +66,14 @@ module RailsAuthenticationEngine
       (DateTime.now.utc.to_f - password_reset.created_at.to_f) >= 86400
     end
 
+    def presenter
+      PasswordResetPresenter.present({
+        form_path: sign_up_passwords_path
+      })
+    end
+
     def user
-      @user ||= User.find_or_initialize_by(email: email_confirmation.email)
+      @_user ||= User.find_or_initialize_by(email: email_confirmation.email)
     end
 
     def user_params

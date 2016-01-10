@@ -32,7 +32,10 @@ module RailsAuthenticationEngine
     end
 
     def successful_password_reset_alert
-      t('rails_authentication_engine.sign_up.success')
+      {
+        type:    :success,
+        message: t('rails_authentication_engine.sign_up.success')
+      }
     end
   end
 end

@@ -21,9 +21,7 @@ module RailsAuthenticationEngine
     end
 
     def notify_user
-      is_a_new_user = user.new_record?
-
-      if is_a_new_user
+      if user_new?
         flash.now[:info] = t(
           'rails_authentication_engine.password_recovery.new_user',
           email: user.email
@@ -32,7 +30,10 @@ module RailsAuthenticationEngine
     end
 
     def successful_password_reset_alert
-      t('rails_authentication_engine.password_recovery.success')
+      {
+        type:    :success,
+        message: t('rails_authentication_engine.password_recovery.success')
+      }
     end
   end
 end

@@ -7,7 +7,7 @@ module RailsAuthenticationEngine
         { path: path }
       end
 
-      def presenter(form_path:, email_confirmation:)
+      def presenter(email_confirmation:, form_path:)
         {
           email_confirmation:  email_confirmation,
           form:                form(form_path)
