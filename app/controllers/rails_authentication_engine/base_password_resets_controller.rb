@@ -37,6 +37,10 @@ module RailsAuthenticationEngine
       @email_confirmation
     end
 
+    def email_confirmation_exists?
+      EmailConfirmation.exists?(token: params[:token])
+    end
+
     def user
       @user ||= User.find_or_initialize_by(email: email_confirmation.email)
     end
@@ -76,9 +80,7 @@ module RailsAuthenticationEngine
     end
 
     def vet_email_confirmation_exists_and_set_email_confirmation
-      confirmation_does_not_exist = !EmailConfirmation.exists?(token: params[:token])
-
-      if confirmation_does_not_exist
+      unless email_confirmation_exists?
         flash[:danger] = invalid_email_confirmation_alert
         redirect_to new_email_confirmation_path_helper
       else
