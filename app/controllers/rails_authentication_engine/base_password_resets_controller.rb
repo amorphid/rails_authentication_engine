@@ -34,7 +34,7 @@ module RailsAuthenticationEngine
     private
 
     def email_confirmation
-      @email_confirmation
+      @_email_confirmation
     end
 
     def email_confirmation_exists?
@@ -45,8 +45,16 @@ module RailsAuthenticationEngine
       (DateTime.now.utc.to_f - email_confirmation.created_at.to_f) >= 86400
     end
 
+    def password_reset
+      @_password_reset ||= PasswordReset.find_by(token: session[:password_reset_token])
+    end
+
     def password_reset_exists?
       PasswordReset.exists?(token: session[:password_reset_token])
+    end
+
+    def password_reset_expired?
+      (DateTime.now.utc.to_f - password_reset.created_at.to_f) >= 86400
     end
 
     def user
@@ -58,16 +66,13 @@ module RailsAuthenticationEngine
     end
 
     def vet_password_reset_and_set_email_confirmation
-      password_reset            = PasswordReset.find_by(token: session[:password_reset_token])
-      password_reset_is_expired = (DateTime.now.utc.to_f - password_reset.created_at.to_f) >= 86400
-
-      if password_reset_is_expired
+      if password_reset_expired?
         redirect_with_alert({
           alert: expired_email_confirmation_alert,
           path:  new_email_confirmation_path_helper
         })
       else
-        @email_confirmation = password_reset.email_confirmation
+        @_email_confirmation = password_reset.email_confirmation
       end
     end
 
@@ -96,7 +101,7 @@ module RailsAuthenticationEngine
           path:  new_email_confirmation_path_helper
         })
       else
-        @email_confirmation = EmailConfirmation.find_by(token: params[:token])
+        @_email_confirmation = EmailConfirmation.find_by(token: params[:token])
       end
     end
   end
