@@ -12,10 +12,6 @@ module RailsAuthenticationEngine
         HashIsh.new(hash)
       end
 
-      def parse_model(model)
-        model.attributes.merge(error_messages: model.errors.full_messages)
-      end
-
       def presenter
         raise NotImplementedError, 'method must be implementd by subclass of BasePresenter'
       end

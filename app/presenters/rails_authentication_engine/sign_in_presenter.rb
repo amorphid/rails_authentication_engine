@@ -6,7 +6,7 @@ module RailsAuthenticationEngine
       def presenter(url, model)
         {
           continue_url: url,
-          user:         parse_model(model)
+          user:         model
         }
       end
     end
