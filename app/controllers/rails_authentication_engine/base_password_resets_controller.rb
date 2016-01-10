@@ -18,7 +18,7 @@ module RailsAuthenticationEngine
         email_confirmation.destroy
         session[:password_reset_token] = nil
         session[:user_id] = @user.id
-        flash[:success] = successful_password_reset_flash_message
+        flash[:success] = successful_password_reset_alert
         redirect_to main_app.root_path
       else
         render :new
@@ -50,7 +50,7 @@ module RailsAuthenticationEngine
       password_reset_is_expired = (DateTime.now.utc.to_f - password_reset.created_at.to_f) >= 86400
 
       if password_reset_is_expired
-        flash[:danger] = expired_email_confirmation_flash_message
+        flash[:danger] = expired_email_confirmation_alert
         redirect_to new_email_confirmation_path_helper
       else
         @email_confirmation = password_reset.email_confirmation
@@ -61,7 +61,7 @@ module RailsAuthenticationEngine
       password_reset_does_not_exist = !PasswordReset.exists?(token: session[:password_reset_token])
 
       if password_reset_does_not_exist
-        flash[:danger] = invalid_email_confirmation_flash_message
+        flash[:danger] = invalid_email_confirmation_alert
         redirect_to new_email_confirmation_path_helper
       end
     end
@@ -70,7 +70,7 @@ module RailsAuthenticationEngine
       email_confirmation_is_expired = (DateTime.now.utc.to_f - email_confirmation.created_at.to_f) >= 86400
 
       if email_confirmation_is_expired
-        flash[:danger] = expired_email_confirmation_flash_message
+        flash[:danger] = expired_email_confirmation_alert
         redirect_to new_email_confirmation_path_helper
       end
     end
@@ -79,7 +79,7 @@ module RailsAuthenticationEngine
       confirmation_does_not_exist = !EmailConfirmation.exists?(token: params[:token])
 
       if confirmation_does_not_exist
-        flash[:danger] = invalid_email_confirmation_flash_message
+        flash[:danger] = invalid_email_confirmation_alert
         redirect_to new_email_confirmation_path_helper
       else
         @email_confirmation = EmailConfirmation.find_by(token: params[:token])

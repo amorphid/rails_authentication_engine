@@ -2,11 +2,11 @@ module RailsAuthenticationEngine
   class PasswordRecoveryPasswordsController < RailsAuthenticationEngine::BasePasswordResetsController
     private
 
-    def expired_email_confirmation_flash_message
+    def expired_email_confirmation_alert
       t('rails_authentication_engine.password_recovery.expired')
     end
 
-    def invalid_email_confirmation_flash_message
+    def invalid_email_confirmation_alert
       t('rails_authentication_engine.password_recovery.invalid')
     end
 
@@ -25,7 +25,7 @@ module RailsAuthenticationEngine
       end
     end
 
-    def successful_password_reset_flash_message
+    def successful_password_reset_alert
       t('rails_authentication_engine.password_recovery.success')
     end
   end
