@@ -22,18 +22,16 @@ module RailsAuthenticationEngine
     private
 
     def continue_url
-      @continue_url ||= params[:continue_url] || main_app.root_url
+      @_continue_url ||= params[:continue_url] || main_app.root_url
     end
 
     def email
-      @email ||= params[:email]
+      @_email ||= params[:email]
     end
 
     def email_invalid?
       email.blank?
     end
-
-
 
     def invalid_user_message
       t('rails_authentication_engine.sign_in.invalid_email', {
@@ -50,7 +48,7 @@ module RailsAuthenticationEngine
     end
 
     def password
-      @password ||= params[:password]
+      @_password ||= params[:password]
     end
 
     def presenter
@@ -104,7 +102,7 @@ module RailsAuthenticationEngine
     end
 
     def user
-      @user ||= User.find_or_initialize_by(email: email)
+      @_user ||= User.find_or_initialize_by(email: email)
     end
 
     def user_authenticate?
