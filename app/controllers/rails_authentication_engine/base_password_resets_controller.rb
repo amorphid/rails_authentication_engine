@@ -45,6 +45,10 @@ module RailsAuthenticationEngine
       (DateTime.now.utc.to_f - email_confirmation.created_at.to_f) >= 86400
     end
 
+    def password_reset_exists?
+      PasswordReset.exists?(token: session[:password_reset_token])
+    end
+
     def user
       @user ||= User.find_or_initialize_by(email: email_confirmation.email)
     end
@@ -68,9 +72,7 @@ module RailsAuthenticationEngine
     end
 
     def vet_password_reset_exists
-      password_reset_does_not_exist = !PasswordReset.exists?(token: session[:password_reset_token])
-
-      if password_reset_does_not_exist
+      unless password_reset_exists?
         redirect_with_alert({
           alert: invalid_email_confirmation_alert,
           path:  new_email_confirmation_path_helper
