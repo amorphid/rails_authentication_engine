@@ -7,7 +7,10 @@ module RailsAuthenticationEngine
     end
 
     def invalid_email_confirmation_alert
-      t('rails_authentication_engine.password_recovery.invalid')
+      {
+        type: :danger,
+        message: t('rails_authentication_engine.password_recovery.invalid')
+      }
     end
 
     def new_email_confirmation_path_helper

@@ -65,8 +65,10 @@ module RailsAuthenticationEngine
       password_reset_does_not_exist = !PasswordReset.exists?(token: session[:password_reset_token])
 
       if password_reset_does_not_exist
-        flash[:danger] = invalid_email_confirmation_alert
-        redirect_to new_email_confirmation_path_helper
+        redirect_with_alert({
+          alert: invalid_email_confirmation_alert,
+          path:  new_email_confirmation_path_helper,
+        })
       end
     end
 
@@ -81,8 +83,10 @@ module RailsAuthenticationEngine
 
     def vet_email_confirmation_exists_and_set_email_confirmation
       unless email_confirmation_exists?
-        flash[:danger] = invalid_email_confirmation_alert
-        redirect_to new_email_confirmation_path_helper
+        redirect_with_alert({
+          alert: invalid_email_confirmation_alert,
+          path:  new_email_confirmation_path_helper,
+        })
       else
         @email_confirmation = EmailConfirmation.find_by(token: params[:token])
       end
