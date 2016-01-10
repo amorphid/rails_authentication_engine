@@ -3,7 +3,10 @@ module RailsAuthenticationEngine
     private
 
     def expired_email_confirmation_alert
-      t('rails_authentication_engine.password_recovery.expired')
+      {
+        type: :danger,
+        message: t('rails_authentication_engine.password_recovery.expired')
+      }
     end
 
     def invalid_email_confirmation_alert

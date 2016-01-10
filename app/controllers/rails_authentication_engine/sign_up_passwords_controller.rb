@@ -3,7 +3,10 @@ module RailsAuthenticationEngine
     private
 
     def expired_email_confirmation_alert
-      t('rails_authentication_engine.sign_up.expired')
+      {
+        type:    :danger,
+        message: t('rails_authentication_engine.sign_up.expired')
+      }
     end
 
     def invalid_email_confirmation_alert

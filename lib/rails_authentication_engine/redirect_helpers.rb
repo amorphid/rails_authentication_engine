@@ -1,5 +1,12 @@
 module RailsAuthenticationEngine
   module RedirectHelpers
+    def alert_danger(message)
+      {
+        type:    :danger,
+        message: message
+      }
+    end
+
     def flash_redirect(type:, message:)
       if type && message
         flash[type] = message

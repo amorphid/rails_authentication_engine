@@ -41,6 +41,10 @@ module RailsAuthenticationEngine
       EmailConfirmation.exists?(token: params[:token])
     end
 
+    def email_confirmation_expired?
+      (DateTime.now.utc.to_f - email_confirmation.created_at.to_f) >= 86400
+    end
+
     def user
       @user ||= User.find_or_initialize_by(email: email_confirmation.email)
     end
@@ -54,8 +58,10 @@ module RailsAuthenticationEngine
       password_reset_is_expired = (DateTime.now.utc.to_f - password_reset.created_at.to_f) >= 86400
 
       if password_reset_is_expired
-        flash[:danger] = expired_email_confirmation_alert
-        redirect_to new_email_confirmation_path_helper
+        redirect_with_alert({
+          alert: expired_email_confirmation_alert,
+          path:  new_email_confirmation_path_helper
+        })
       else
         @email_confirmation = password_reset.email_confirmation
       end
@@ -67,17 +73,17 @@ module RailsAuthenticationEngine
       if password_reset_does_not_exist
         redirect_with_alert({
           alert: invalid_email_confirmation_alert,
-          path:  new_email_confirmation_path_helper,
+          path:  new_email_confirmation_path_helper
         })
       end
     end
 
     def vet_email_confirmation
-      email_confirmation_is_expired = (DateTime.now.utc.to_f - email_confirmation.created_at.to_f) >= 86400
-
-      if email_confirmation_is_expired
-        flash[:danger] = expired_email_confirmation_alert
-        redirect_to new_email_confirmation_path_helper
+      if email_confirmation_expired?
+        redirect_with_alert({
+          alert: expired_email_confirmation_alert,
+          path:  new_email_confirmation_path_helper
+        })
       end
     end
 
@@ -85,7 +91,7 @@ module RailsAuthenticationEngine
       unless email_confirmation_exists?
         redirect_with_alert({
           alert: invalid_email_confirmation_alert,
-          path:  new_email_confirmation_path_helper,
+          path:  new_email_confirmation_path_helper
         })
       else
         @email_confirmation = EmailConfirmation.find_by(token: params[:token])
