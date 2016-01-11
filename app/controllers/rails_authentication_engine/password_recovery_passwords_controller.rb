@@ -21,6 +21,7 @@ module RailsAuthenticationEngine
     end
 
     def notify_user
+      # binding.pry
       if user_new?
         flash.now[:info] = t(
           'rails_authentication_engine.password_recovery.new_user',

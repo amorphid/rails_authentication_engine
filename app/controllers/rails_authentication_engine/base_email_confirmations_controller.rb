@@ -48,7 +48,7 @@ module RailsAuthenticationEngine
     def presenter
       EmailConfirmationPresenter.present({
         email_confirmation: email_confirmation,
-        form_path:          sign_up_emails_path
+        form_path:          base_email_confirmation_email_path
       })
     end
 
