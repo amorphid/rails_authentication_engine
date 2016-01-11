@@ -2,6 +2,6 @@
 
 <%= render(
   'rails_authentication_engine/password_resets/form',
-  form_path: password_recovery_passwords_path,
-  errors:    @user.errors
+  form: presenter.forn,
+  user: presenter.user
 )%>

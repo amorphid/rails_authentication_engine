@@ -85,7 +85,7 @@ module RailsAuthenticationEngine
         end
 
         it 'has 1 error' do
-          result = assigns[:user].errors.count
+          result = assigns[:_user].errors.count
           expect(result).to eq(1)
         end
       end
@@ -101,7 +101,7 @@ module RailsAuthenticationEngine
         end
 
         it 'has 1 error' do
-          result = assigns[:user].errors.count
+          result = assigns[:_user].errors.count
           expect(result).to eq(1)
         end
       end

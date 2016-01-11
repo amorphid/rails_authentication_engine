@@ -7,10 +7,10 @@ module RailsAuthenticationEngine
         { path: path }
       end
 
-      def presenter(form_path:, password_reset:)
+      def presenter(form_path:, user:)
         {
-          form:           form(form_path),
-          password_reset: password_reset,
+          form: form(form_path),
+          user: user
         }
       end
     end

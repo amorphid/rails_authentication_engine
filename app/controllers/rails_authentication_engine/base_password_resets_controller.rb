@@ -22,7 +22,7 @@ module RailsAuthenticationEngine
           path:  main_app.root_path
         })
       else
-        render :new
+        render_new
       end
     end
 
@@ -30,6 +30,7 @@ module RailsAuthenticationEngine
       session[:password_reset_token] = PasswordReset
                                        .create(email_confirmation_id: email_confirmation.id)
                                        .token
+      render_new
     end
 
     private
@@ -68,7 +69,8 @@ module RailsAuthenticationEngine
 
     def presenter
       PasswordResetPresenter.present({
-        form_path: sign_up_passwords_path
+        form_path: sign_up_passwords_path,
+        user:      user
       })
     end
 
