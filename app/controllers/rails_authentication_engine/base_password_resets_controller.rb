@@ -8,6 +8,7 @@ module RailsAuthenticationEngine
 
     before_action :vet_email_confirmation_exists_and_set_email_confirmation,
                   :vet_email_confirmation,
+                  :vet_user!,
                   only: :new
 
     append_before_action :notify_user
@@ -120,6 +121,10 @@ module RailsAuthenticationEngine
       else
         @_email_confirmation = EmailConfirmation.find_by(token: params[:token])
       end
+    end
+
+    def vet_user!
+      raise "implement me"
     end
   end
 end
