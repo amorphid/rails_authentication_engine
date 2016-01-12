@@ -8,15 +8,22 @@
 </head>
 <body>
   <% if flash[:danger] %>
-    <%= sanitize(flash[:danger]) %>
+    <div class='alert alert-danger'>
+      <%= sanitize(flash[:danger]) %>
+    </div>
   <% end %>
   <% if flash[:info] %>
-    <%= sanitize(flash[:info]) %>
+    <div class='alert alert-info'>
+      <%= sanitize(flash[:info]) %>
+    </div>
   <% end %>
   <% if flash[:success] %>
-    <%= sanitize(flash[:success]) %>
+    <div class='alert alert-success'>
+      <%= sanitize(flash[:success]) %>
+    </div>
   <% end %>
   <% if flash[:warning] %>
+    <div class='alert alert-warning'>
     <%= sanitize(flash[:warning]) %>
   <% end %>
   <%= yield %>
