@@ -1,8 +1,16 @@
 module RailsAuthenticationEngine
   module RedirectHelpers
     def alert_danger(message)
+      alert_type_and_message(:danger, message)
+    end
+
+    def alert_success(message)
+      alert_type_and_message(:success, message)
+    end
+
+    def alert_type_and_message(type, message)
       {
-        type:    :danger,
+        type:    type,
         message: message
       }
     end

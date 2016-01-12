@@ -3,17 +3,11 @@ module RailsAuthenticationEngine
     private
 
     def expired_email_confirmation_alert
-      {
-        type: :danger,
-        message: t('rails_authentication_engine.password_recovery.expired')
-      }
+      alert_danger(t('rails_authentication_engine.password_recovery.expired'))
     end
 
     def invalid_email_confirmation_alert
-      {
-        type: :danger,
-        message: t('rails_authentication_engine.password_recovery.invalid')
-      }
+      alert_danger(t('rails_authentication_engine.password_recovery.invalid'))
     end
 
     def new_email_confirmation_path_helper
@@ -21,7 +15,6 @@ module RailsAuthenticationEngine
     end
 
     def notify_user
-      # binding.pry
       if user_new?
         flash.now[:info] = t(
           'rails_authentication_engine.password_recovery.new_user',
@@ -31,10 +24,7 @@ module RailsAuthenticationEngine
     end
 
     def successful_password_reset_alert
-      {
-        type:    :success,
-        message: t('rails_authentication_engine.password_recovery.success')
-      }
+      alert_success(t('rails_authentication_engine.password_recovery.success'))
     end
   end
 end

@@ -3,17 +3,11 @@ module RailsAuthenticationEngine
     private
 
     def expired_email_confirmation_alert
-      {
-        type:    :danger,
-        message: t('rails_authentication_engine.sign_up.expired')
-      }
+      alert_danger(t('rails_authentication_engine.sign_up.expired'))
     end
 
     def invalid_email_confirmation_alert
-      {
-        type:    :danger,
-        message: t('rails_authentication_engine.sign_up.invalid')
-      }
+      alert_danger(t('rails_authentication_engine.sign_up.invalid'))
     end
 
     def new_email_confirmation_path_helper
@@ -32,10 +26,7 @@ module RailsAuthenticationEngine
     end
 
     def successful_password_reset_alert
-      {
-        type:    :success,
-        message: t('rails_authentication_engine.sign_up.success')
-      }
+      alert_success(t('rails_authentication_engine.sign_up.success'))
     end
   end
 end
