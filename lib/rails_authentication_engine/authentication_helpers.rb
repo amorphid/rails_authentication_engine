@@ -1,17 +1,22 @@
 module RailsAuthenticationEngine
   module AuthenticationHelpers
+    include RedirectHelpers
+
     def authenticate!
       unless current_user
-        flash[:danger] = t('rails_authentication_engine.authentication.sign_in_required')
-        # flash[:danger] = 'You must be logged in to visit that page.'
-        redirect_to rails_authentication_engine.new_sign_in_path(continue_url: request.url)
+        redirect_with_alert({
+          alert: alert_danger(t('rails_authentication_engine.authentication.sign_in_required')),
+          path:  rails_authentication_engine.new_sign_in_path(continue_url: request.url)
+        })
       end
     end
 
     def authenticate_guest!
       if User.exists?(session[:user_id])
-        flash[:info] = t('rails_authentication_engine.flash.authenticated_user_exists')
-        redirect_to main_app.root_path
+        redirect_with_alert({
+          alert: alert_info(t('rails_authentication_engine.authentication.already_signed_in')),
+          path:  main_app.root_path
+        })
       end
     end
 

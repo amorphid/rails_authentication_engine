@@ -7,7 +7,7 @@ shared_examples 'an authenticated user visiting a page for guests' do
   end
 
   it 'displays flash info to authenticated users' do
-    expect(flash[:info]).to eq(t('rails_authentication_engine.flash.authenticated_user_exists'))
+    expect(flash[:info]).to eq(t('rails_authentication_engine.authentication.already_signed_in'))
   end
 
   it 'redirects to root path' do

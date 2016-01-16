@@ -1,20 +1,19 @@
 en:
   rails_authentication_engine:
     authentication:
+      already_signed_in: "You are already signed in.  If you'd REALLY like to visit that page, log out first."
       sign_in_required: 'You must be signed in to visit that page.'
-    flash:
-      authenticated_user_exists: "You are already logged in.  If you'd REALLY like to visit that page, log out first."
     password_recovery:
       expired: 'Expired password recovery email link.  Please enter your email to receive another one.'
       invalid: 'Invalid password recovery email link.  Please enter your email to receive another one.'
       new_user: "There's no existing account for '%{email}'.  Enter a password, and we'll create one for you."
-      success: "You new password has been set, and you're are now logged in.  N-I-C-E!"
+      success: "You new password has been set, and you're are now signed in.  N-I-C-E!"
     sign_in:
       invalid_password: "That's the incorrect password for the account with email '%{email}' :P<br />If needed, click <a href='%{path}'>here</a> to reset your password!"
       invalid_email: "We don't have an account for email '%{email}' :P  If needed, you can sign up <a href='%{path}'>here</a>!"
-      success: 'You are now logged in.  Exciting!'
+      success: 'You are now signed in.  Exciting!'
     sign_up:
       existing_user: "Hey!  There's an existing account for '%{email}'.  Enter a password, and we'll set it for you."
       expired: 'Expired sign up email link.  Please enter your email to receive another one.'
       invalid:  'Invalid sign up email link.  Please enter your email to receive another one.'
-      success: "You are now signed up, and you're logged in, too.  N-I-C-E!"
+      success: "You are now signed up, and you're signed in, too.  N-I-C-E!"

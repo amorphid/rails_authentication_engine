@@ -4,6 +4,10 @@ module RailsAuthenticationEngine
       alert_type_and_message(:danger, message)
     end
 
+    def alert_info(message)
+      alert_type_and_message(:info, message)
+    end
+
     def alert_success(message)
       alert_type_and_message(:success, message)
     end
