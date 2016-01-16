@@ -1,5 +1,7 @@
 en:
   rails_authentication_engine:
+    authentication:
+      sign_in_required: 'You must be signed in to visit that page.'
     flash:
       authenticated_user_exists: "You are already logged in.  If you'd REALLY like to visit that page, log out first."
     password_recovery:

@@ -2,7 +2,8 @@ module RailsAuthenticationEngine
   module AuthenticationHelpers
     def authenticate!
       unless current_user
-        flash[:danger] = 'You must be logged in to visit that page.'
+        flash[:danger] = t('rails_authentication_engine.authentication.sign_in_required')
+        # flash[:danger] = 'You must be logged in to visit that page.'
         redirect_to rails_authentication_engine.new_sign_in_path(continue_url: request.url)
       end
     end
