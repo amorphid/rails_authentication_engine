@@ -1,5 +1,5 @@
 class StaticPagesController < ApplicationController
-  before_action -> { authenticate! }, only: [:pagey_mc_page, :rooty_mc_root]
+  before_action :authenticate!, only: [:pagey_mc_page, :rooty_mc_root]
 
   def pagey_mc_page
   end
