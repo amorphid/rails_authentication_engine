@@ -12,11 +12,11 @@ module RailsAuthenticationEngine
       sanitize_inputs
 
       [
-        :enable_extension_uuid_ossp_in_rails_authentication_engine,
+        (:enable_extension_uuid_ossp_in_rails_authentication_engine if database_id_type == 'uuid'),
         :create_rails_authentication_engine_email_confirmations,
         :create_rails_authentication_engine_password_resets,
         :create_user
-      ].each do |migration|
+      ].compact.each do |migration|
         path = Rails.root.join('db', 'migrate', "#{timestamp_counter}_#{migration}.rb")
         create_file path, send(migration)
       end
@@ -30,7 +30,7 @@ module RailsAuthenticationEngine
       <<-MIGRATION
 class CreateRailsAuthenticationEnginePasswordResets < ActiveRecord::Migration
   def change
-    create_table :rails_authentication_engine_password_resets, #{ {id: database_id_type } } do |t|
+    create_table :rails_authentication_engine_password_resets#{", {id: :" + database_id_type +  "}" if database_id_type == "uuid"} do |t|
       t.string :token
       ENV['POSTGRESQL_ID'] == 'uuid' ? (t.uuid :email_confirmation_id) : (t.integer :email_confirmation_id)
 
@@ -45,10 +45,7 @@ end
       <<-MIGRATION
 class CreateRailsAuthenticationEngineEmailConfirmations < ActiveRecord::Migration
   def change
-    create_table *([
-      :rails_authentication_engine_email_confirmations,
-      ({ id: :uuid } if ENV['POSTGRESQL_ID'] == 'uuid')
-    ]).compact  do |t|
+    create_table :rails_authentication_engine_email_confirmations#{", {id: :" + database_id_type +  "}" if database_id_type == "uuid" } do |t|
       t.string :email
       t.string :token
 
@@ -63,10 +60,7 @@ end
       <<-MIGRATION
 class CreateUser < ActiveRecord::Migration
   def change
-    create_table *([
-      :users,
-      ({ id: :uuid } if ENV['POSTGRESQL_ID'] == 'uuid')
-    ]).compact  do |t|
+    create_table :users#{", {id: :" + database_id_type +  "}" if database_id_type == "uuid" } do |t|
       t.string :email
       t.string :password_digest
 
@@ -177,7 +171,7 @@ end
       end
 
       @database_id_type = if paths.first == 'database_id_type:integer' || paths.first == 'database_id_type:uuid'
-        paths.first.split(":").last.to_sym
+        paths.first.split(":").last
       else
       end
     end
