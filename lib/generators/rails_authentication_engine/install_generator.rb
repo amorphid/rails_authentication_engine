@@ -4,7 +4,7 @@ require 'rails/generators/actions'
 
 module RailsAuthenticationEngine
   class InstallGenerator < ::Rails::Generators::Base
-    attr_reader :mount_path
+    attr_reader :database_id_type, :mount_path
 
     desc 'Installs RailsAuthenticationEngine'
 
@@ -30,10 +30,7 @@ module RailsAuthenticationEngine
       <<-MIGRATION
 class CreateRailsAuthenticationEnginePasswordResets < ActiveRecord::Migration
   def change
-    create_table *([
-      :rails_authentication_engine_password_resets,
-      ({ id: :uuid } if ENV['POSTGRESQL_ID'] == 'uuid')
-    ]).compact  do |t|
+    create_table :rails_authentication_engine_password_resets, #{ {id: database_id_type } } do |t|
       t.string :token
       ENV['POSTGRESQL_ID'] == 'uuid' ? (t.uuid :email_confirmation_id) : (t.integer :email_confirmation_id)
 
@@ -91,15 +88,31 @@ end
     end
 
     def sanitize_inputs
+      puts
+      puts '-----RailsAuthenticationEngine intaller-----'
+      puts
+
       sanitize_mount_path
+      sanitize_database_id_type
     end
 
     def sanitize_mount_path
-      paths = ARGV.select { |string| string.match(/^mount_path:/) }
+      paths = ARGV.select { |string| string.match(/^mount_path/) }
 
       if paths.length > 1
         puts
-        puts "Multiple 'mount_path' detected.  Please input 'mount_path:<path>' only once."
+        puts "Multiple 'mount_path' inuts detected.  Please input 'mount_path:<path>' only once."
+        puts
+        exit
+      end
+
+      if paths.first == 'mount_path' || paths.first == 'mount_path:'
+        puts
+        puts "'#{paths.first}' is invalid syntax."
+        puts
+        puts "Examples for valid mount_path syntax:"
+        puts "- mount_path for '/'    => mount_path:/"
+        puts "- mount_path for '/foo' => mount_path:/foo"
         puts
         exit
       end
@@ -110,12 +123,12 @@ end
         puts
         puts 'You need to specify a mount_path.'
         puts
-        puts "Example routes for mount path '/':"
+        puts "Example routes for mount_path '/':"
         puts "- sign in           => /sign_in"
         puts "- sign up           => /sign_up"
         puts "- password recovery => /password_recovery"
         puts
-        puts "Example routes for mount path '/foo':"
+        puts "Example routes for mount_path '/foo':"
         puts "- sign in           => /foo/sign_in"
         puts "- sign up           => /foo/sign_up"
         puts "- password recovery => /foo/password_recovery"
@@ -124,6 +137,48 @@ end
         input = gets.chomp
 
         input.match(/^\//) ? input : "/#{input}"
+      end
+    end
+
+    def sanitize_database_id_type
+      paths = ARGV.select { |string| string.match(/^database_id_type/) }
+
+      if paths.length > 1
+        puts
+        puts "Multiple 'database_id_type' inputs detected.  Please input 'database_id_type:<type>' only once."
+        puts
+        exit
+      end
+
+      if paths.first == 'database_id_type' || paths.first == 'database_id_type:'
+        puts
+        puts "'#{paths.first}' is invalid syntax."
+        puts
+        puts "Examples for valid database_id_type syntax:"
+        puts "- integer => database_id_type:integer"
+        puts "- uuid    => database_id_type:uuid"
+        puts
+        exit
+      end
+
+      unless paths.first == 'database_id_type:integer' || paths.first == 'database_id_type:uuid'
+        puts
+        puts "'#{paths.first}' is an invalid type."
+        puts
+        puts "Supported types:"
+        puts '- integer'
+        puts '- uuid'
+        pust
+        puts "Examples for valid database_id_type types:"
+        puts "- integer => database_id_type:integer"
+        puts "- uuid    => database_id_type:uuid"
+        puts
+        exit
+      end
+
+      @database_id_type = if paths.first == 'database_id_type:integer' || paths.first == 'database_id_type:uuid'
+        paths.first.split(":").last.to_sym
+      else
       end
     end
 
