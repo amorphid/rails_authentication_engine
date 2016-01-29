@@ -84,7 +84,6 @@ end
     def sanitize_inputs
       puts
       puts '-----RailsAuthenticationEngine intaller-----'
-      puts
 
       sanitize_mount_path
       sanitize_database_id_type
@@ -95,12 +94,17 @@ end
 
       if paths.length > 1
         puts
+        puts ">> mount_path <<"
+        puts
+        puts
         puts "Multiple 'mount_path' inuts detected.  Please input 'mount_path:<path>' only once."
         puts
         exit
       end
 
       if paths.first == 'mount_path' || paths.first == 'mount_path:'
+        puts
+        puts ">> mount_path <<"
         puts
         puts "'#{paths.first}' is invalid syntax."
         puts
@@ -115,6 +119,8 @@ end
         paths.first.split(":").last
       else
         puts
+        puts ">> mount_path <<"
+        puts
         puts 'You need to specify a mount_path.'
         puts
         puts "Example routes for mount_path '/':"
@@ -127,7 +133,7 @@ end
         puts "- sign up           => /foo/sign_up"
         puts "- password recovery => /foo/password_recovery"
         puts
-        print "Specify mount path (hit enter for default '/'):  "
+        print "Specify mount_path (hit enter for default '/'):  "
         input = gets.chomp
 
         input.match(/^\//) ? input : "/#{input}"
@@ -139,12 +145,16 @@ end
 
       if paths.length > 1
         puts
+        puts  ">> database_id_type <<"
+        puts
         puts "Multiple 'database_id_type' inputs detected.  Please input 'database_id_type:<type>' only once."
         puts
         exit
       end
 
       if paths.first == 'database_id_type' || paths.first == 'database_id_type:'
+        puts
+        puts  ">> database_id_type <<"
         puts
         puts "'#{paths.first}' is invalid syntax."
         puts
@@ -155,17 +165,15 @@ end
         exit
       end
 
-      unless paths.first == 'database_id_type:integer' || paths.first == 'database_id_type:uuid'
+      if ActiveRecord::Base.connection.instance_values["config"][:adapter] != "postgresql" && paths.first == 'database_id_type:uuid'
         puts
-        puts "'#{paths.first}' is an invalid type."
+        puts  ">> database_id_type <<"
         puts
-        puts "Supported types:"
-        puts '- integer'
-        puts '- uuid'
-        pust
-        puts "Examples for valid database_id_type types:"
-        puts "- integer => database_id_type:integer"
-        puts "- uuid    => database_id_type:uuid"
+        puts "This installer only supports UUID primary keys for 'postgresql' (you're using '#{ActiveRecord::Base.connection.instance_values["config"][:adapter]}')."
+        puts
+        puts "If you want to use UUID primary keys, do one of the following:"
+        puts "- edit the migratinons manually"
+        puts "- switch to postgresql"
         puts
         exit
       end
@@ -173,6 +181,38 @@ end
       @database_id_type = if paths.first == 'database_id_type:integer' || paths.first == 'database_id_type:uuid'
         paths.first.split(":").last
       else
+        puts
+        puts  ">> database_id_type <<"
+        puts
+        puts "You need to specify a database_id_type"
+        puts
+        puts "Supported types"
+        puts "- integer"
+        puts "- uuid"
+        puts
+        print "Specify database_id_type (hit enter for default 'integer'):  "
+
+        input = STDIN.gets.chomp
+
+        if input.blank?
+          input = 'integer'
+        else
+          until input == 'integer' || input == 'uuid'
+            puts
+            puts "'#{input} is not a supported type."
+            puts
+            puts "Supported types"
+            puts "- integer"
+            puts "- uuid"
+            puts
+            print "Specify database_id_type (hit enter for default 'integer'):  "
+            input = STDIN.gets.chomp
+
+            input = 'integer' if input.blank?
+          end
+        end
+
+        input
       end
     end
 

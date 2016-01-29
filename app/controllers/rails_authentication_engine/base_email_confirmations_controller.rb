@@ -55,7 +55,7 @@ module RailsAuthenticationEngine
     def send_email_confirmation_email
       UserMailer
       .send(mailer_method, email_confirmation)
-      .send(deliver_mail_now_or_later)
+      .deliver_now
     end
 
     def vetted_email_confirmation
